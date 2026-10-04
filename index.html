@@ -104,17 +104,23 @@ button.action:hover {
     opacity: .85;
 }
 
-button.danger {
-    background: #b00020;
-}
-
 button.secondary {
     background: #666;
+}
+
+button.danger {
+    background: #b00020;
 }
 
 .status {
     margin-top: 12px;
     color: #555;
+    white-space: pre-wrap;
+}
+
+.error {
+    color: #b00020;
+    white-space: pre-wrap;
 }
 
 .chat-layout {
@@ -173,8 +179,10 @@ button.secondary {
     opacity: .7;
 }
 
-.chat-main {
-    min-width: 0;
+.empty-history {
+    color: #777;
+    text-align: center;
+    padding: 20px 5px;
 }
 
 .chat-box {
@@ -215,6 +223,13 @@ button.secondary {
     border-radius: 10px;
 }
 
+.preview {
+    max-width: 100%;
+    max-height: 400px;
+    margin-top: 12px;
+    border-radius: 10px;
+}
+
 .model {
     border: 1px solid #ddd;
     padding: 12px;
@@ -223,27 +238,28 @@ button.secondary {
     background: #fafafa;
 }
 
-.preview {
-    max-width: 100%;
-    max-height: 400px;
-    margin-top: 12px;
-    border-radius: 10px;
+.model-title {
+    font-weight: bold;
 }
 
-.error {
-    color: #b00020;
+.model-capabilities {
+    margin-top: 5px;
+    color: #555;
+    font-size: 13px;
+}
+
+.image-model-box {
+    padding: 10px;
+    background: #f7f7f7;
+    border-radius: 8px;
     margin-top: 10px;
-    white-space: pre-wrap;
 }
 
-.empty-history {
-    color: #777;
-    text-align: center;
-    padding: 20px 5px;
+.loading {
+    opacity: .7;
 }
 
 @media (max-width: 800px) {
-
     .chat-layout {
         grid-template-columns: 1fr;
     }
@@ -268,27 +284,42 @@ button.secondary {
 <div class="container">
 
     <div class="tabs">
-        <button class="tab active" data-tab="chat">
+
+        <button
+            class="tab active"
+            data-tab="chat"
+        >
             Chat
         </button>
 
-        <button class="tab" data-tab="image">
-            Grok Imagine
+        <button
+            class="tab"
+            data-tab="image"
+        >
+            Image Generation
         </button>
 
-        <button class="tab" data-tab="edit">
+        <button
+            class="tab"
+            data-tab="edit"
+        >
             Image Edit
         </button>
 
-        <button class="tab" data-tab="models">
+        <button
+            class="tab"
+            data-tab="models"
+        >
             Models
         </button>
+
     </div>
 
 
-    <!-- CHAT -->
-
-    <section id="chat" class="panel active">
+    <section
+        id="chat"
+        class="panel active"
+    >
 
         <div class="chat-layout">
 
@@ -296,7 +327,9 @@ button.secondary {
 
                 <div class="history-header">
 
-                    <button onclick="newChat()">
+                    <button
+                        onclick="newChat()"
+                    >
                         New
                     </button>
 
@@ -314,13 +347,14 @@ button.secondary {
             </aside>
 
 
-            <main class="chat-main">
+            <main>
 
                 <label for="provider">
                     Provider
                 </label>
 
                 <select id="provider">
+
                     <option value="all">
                         All
                     </option>
@@ -360,6 +394,7 @@ button.secondary {
                     <option value="MiniMax">
                         MiniMax
                     </option>
+
                 </select>
 
 
@@ -417,9 +452,32 @@ button.secondary {
     </section>
 
 
-    <!-- IMAGE GENERATION -->
+    <section
+        id="image"
+        class="panel"
+    >
 
-    <section id="image" class="panel">
+        <h2>
+            Image Generation
+        </h2>
+
+
+        <label for="imageModel">
+            Image Model
+        </label>
+
+        <select id="imageModel">
+            <option value="">
+                Loading image models...
+            </option>
+        </select>
+
+
+        <div
+            id="imageModelInfo"
+            class="image-model-box"
+        ></div>
+
 
         <label for="imagePrompt">
             Prompt
@@ -491,9 +549,32 @@ button.secondary {
     </section>
 
 
-    <!-- IMAGE EDIT -->
+    <section
+        id="edit"
+        class="panel"
+    >
 
-    <section id="edit" class="panel">
+        <h2>
+            Image Edit
+        </h2>
+
+
+        <label for="editModel">
+            Image Model
+        </label>
+
+        <select id="editModel">
+            <option value="">
+                Loading image models...
+            </option>
+        </select>
+
+
+        <div
+            id="editModelInfo"
+            class="image-model-box"
+        ></div>
+
 
         <label for="editFile">
             Image
@@ -547,9 +628,10 @@ button.secondary {
     </section>
 
 
-    <!-- MODELS -->
-
-    <section id="models" class="panel">
+    <section
+        id="models"
+        class="panel"
+    >
 
         <button
             class="action"
@@ -574,20 +656,13 @@ button.secondary {
 
 <script>
 
-/*
- * Frontend is hosted on GitHub Pages.
- * API requests go through the Netlify Function.
- */
-
 const API =
     "https://myhamed.netlify.app/.netlify/functions/ai";
 
 
-/*
- * Chat state.
- */
-
 let allModels = [];
+
+let imageModels = [];
 
 let chats = [];
 
@@ -596,165 +671,145 @@ let currentChatId = null;
 let messages = [];
 
 
-/*
- * Local storage key.
- */
-
 const STORAGE_KEY =
     "ai_studio_chats_v1";
 
-
-/*
- * Tabs.
- */
 
 document
     .querySelectorAll(".tab")
     .forEach(button => {
 
-        button.addEventListener("click", () => {
+        button.addEventListener(
+            "click",
+            () => {
 
-            document
-                .querySelectorAll(".tab")
-                .forEach(item =>
-                    item.classList.remove("active")
+                document
+                    .querySelectorAll(".tab")
+                    .forEach(item =>
+                        item.classList.remove(
+                            "active"
+                        )
+                    );
+
+                document
+                    .querySelectorAll(".panel")
+                    .forEach(item =>
+                        item.classList.remove(
+                            "active"
+                        )
+                    );
+
+                button.classList.add(
+                    "active"
                 );
 
-            document
-                .querySelectorAll(".panel")
-                .forEach(item =>
-                    item.classList.remove("active")
-                );
+                document
+                    .getElementById(
+                        button.dataset.tab
+                    )
+                    .classList.add(
+                        "active"
+                    );
 
-            button.classList.add("active");
-
-            document
-                .getElementById(button.dataset.tab)
-                .classList.add("active");
-
-        });
+            }
+        );
 
     });
 
 
-/*
- * API.
- */
-
-async function api(action, payload = {}) {
-
+async function api(
+    action,
+    payload = {}
+) {
     const response =
-        await fetch(API, {
-
-            method: "POST",
-
-            headers: {
-                "Content-Type": "application/json"
-            },
-
-            body: JSON.stringify({
-                action,
-                payload
-            })
-
-        });
-
+        await fetch(
+            API,
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type":
+                        "application/json"
+                },
+                body:
+                    JSON.stringify({
+                        action,
+                        payload
+                    })
+            }
+        );
 
     const text =
         await response.text();
 
-
     let data;
 
-
     try {
-
         data =
             JSON.parse(text);
-
     } catch {
-
         throw new Error(
-            text || `HTTP ${response.status}`
+            text ||
+            `HTTP ${response.status}`
         );
-
     }
-
 
     if (!response.ok) {
-
-        const error =
-            data.error;
-
-
-        if (typeof error === "string") {
-
-            throw new Error(error);
-
-        }
-
-
-        if (error?.message) {
-
-            throw new Error(error.message);
-
-        }
-
-
-        if (data.message) {
-
-            throw new Error(
-                typeof data.message === "string"
-                    ? data.message
-                    : JSON.stringify(
-                        data.message,
-                        null,
-                        2
-                    )
-            );
-
-        }
-
-
         throw new Error(
-            JSON.stringify(data, null, 2)
+            extractError(data)
         );
-
     }
 
-
     return data;
-
 }
 
 
-/*
- * Generate unique chat ID.
- */
+function extractError(data) {
+    if (
+        typeof data?.error ===
+        "string"
+    ) {
+        return data.error;
+    }
+
+    if (data?.error?.message) {
+        return data.error.message;
+    }
+
+    if (data?.message) {
+        return typeof data.message ===
+            "string"
+            ? data.message
+            : JSON.stringify(
+                data.message,
+                null,
+                2
+            );
+    }
+
+    return JSON.stringify(
+        data,
+        null,
+        2
+    );
+}
+
 
 function createChatId() {
-
     return (
         Date.now().toString(36) +
         Math.random()
             .toString(36)
             .substring(2, 8)
     );
-
 }
 
 
-/*
- * Load chats from localStorage.
- */
-
 function loadChats() {
-
     try {
-
         const saved =
-            localStorage.getItem(STORAGE_KEY);
-
+            localStorage.getItem(
+                STORAGE_KEY
+            );
 
         chats =
             saved
@@ -762,73 +817,46 @@ function loadChats() {
                 : [];
 
     } catch {
-
         chats = [];
-
     }
-
 
     if (!Array.isArray(chats)) {
-
         chats = [];
-
     }
-
 
     renderHistory();
 
-
     if (chats.length > 0) {
-
-        openChat(chats[0].id);
-
+        openChat(
+            chats[0].id
+        );
     } else {
-
         newChat();
-
     }
-
 }
 
 
-/*
- * Save chats.
- */
-
 function saveChats() {
-
     localStorage.setItem(
         STORAGE_KEY,
         JSON.stringify(chats)
     );
-
 }
 
 
-/*
- * Create new chat.
- */
-
 function newChat() {
-
     const chat = {
-
         id: createChatId(),
-
         title: "New Chat",
-
         model:
-            document.getElementById("chatModel")
-                ?.value || "gpt-6-astra",
-
+            document.getElementById(
+                "chatModel"
+            )?.value ||
+            "gpt-6-astra",
         messages: [],
-
         createdAt: Date.now(),
-
         updatedAt: Date.now()
-
     };
-
 
     chats.unshift(chat);
 
@@ -838,168 +866,145 @@ function newChat() {
     messages =
         chat.messages;
 
-
     saveChats();
 
     renderHistory();
 
     renderMessages();
 
-    document.getElementById("chatStatus")
-        .textContent = "";
-
+    document.getElementById(
+        "chatStatus"
+    ).textContent = "";
 }
 
 
-/*
- * Open existing chat.
- */
-
 function openChat(id) {
-
     const chat =
-        chats.find(item => item.id === id);
-
+        chats.find(
+            item =>
+                item.id === id
+        );
 
     if (!chat) {
         return;
     }
-
 
     currentChatId =
         chat.id;
 
-
     messages =
-        Array.isArray(chat.messages)
+        Array.isArray(
+            chat.messages
+        )
             ? chat.messages
             : [];
 
-
     const model =
-        document.getElementById("chatModel");
+        document.getElementById(
+            "chatModel"
+        );
 
-
-    if (model && chat.model) {
-
+    if (
+        model &&
+        chat.model
+    ) {
         model.value =
             chat.model;
-
     }
-
 
     renderHistory();
 
     renderMessages();
-
 }
 
 
-/*
- * Save current chat.
- */
-
 function saveCurrentChat() {
-
     const chat =
         chats.find(
-            item => item.id === currentChatId
+            item =>
+                item.id ===
+                currentChatId
         );
-
 
     if (!chat) {
         return;
     }
 
-
     chat.messages =
         messages;
 
-
     chat.model =
-        document.getElementById("chatModel")
-            .value;
-
+        document.getElementById(
+            "chatModel"
+        ).value;
 
     chat.updatedAt =
         Date.now();
 
-
-    /*
-     * Automatically create a title
-     * from the first user message.
-     */
-
     const firstUserMessage =
         messages.find(
-            item => item.role === "user"
+            item =>
+                item.role ===
+                "user"
         );
-
 
     if (
         firstUserMessage &&
-        chat.title === "New Chat"
+        chat.title ===
+            "New Chat"
     ) {
-
         chat.title =
             firstUserMessage.content
-                .replace(/\s+/g, " ")
+                .replace(
+                    /\s+/g,
+                    " "
+                )
                 .trim()
-                .substring(0, 40);
-
+                .substring(
+                    0,
+                    40
+                );
     }
-
 
     chats.sort(
         (a, b) =>
-            b.updatedAt - a.updatedAt
+            b.updatedAt -
+            a.updatedAt
     );
-
 
     saveChats();
 
     renderHistory();
-
 }
 
 
-/*
- * Render chat history.
- */
-
 function renderHistory() {
-
     const list =
         document.getElementById(
             "historyList"
         );
 
-
     if (!chats.length) {
-
         list.innerHTML =
             '<div class="empty-history">No chats yet.</div>';
 
         return;
-
     }
-
 
     list.innerHTML =
         chats.map(chat => {
 
             const active =
-                chat.id === currentChatId
+                chat.id ===
+                currentChatId
                     ? "active"
                     : "";
-
 
             return `
                 <div
                     class="history-item ${active}"
                     onclick="openChat('${chat.id}')"
                 >
-
                     <div class="history-item-title">
                         ${esc(chat.title)}
                     </div>
@@ -1008,151 +1013,85 @@ function renderHistory() {
                         ${chat.messages.length}
                         messages
                     </div>
-
                 </div>
             `;
 
         }).join("");
-
 }
 
 
-/*
- * Render messages.
- */
-
 function renderMessages() {
-
     const box =
         document.getElementById(
             "chatBox"
         );
 
-
     box.innerHTML = "";
 
+    messages.forEach(
+        message => {
 
-    messages.forEach(message => {
+            addMsg(
+                message.role,
+                message.content
+            );
 
-        addMsg(
-            message.role,
-            message.content
-        );
-
-    });
-
+        }
+    );
 }
 
-
-/*
- * Delete current chat.
- */
-
-function deleteCurrentChat() {
-
-    if (!currentChatId) {
-        return;
-    }
-
-
-    chats =
-        chats.filter(
-            chat =>
-                chat.id !== currentChatId
-        );
-
-
-    if (chats.length) {
-
-        saveChats();
-
-        openChat(chats[0].id);
-
-    } else {
-
-        saveChats();
-
-        newChat();
-
-    }
-
-}
-
-
-/*
- * Delete all chats.
- */
 
 function deleteAllChats() {
-
     if (!chats.length) {
         return;
     }
 
-
-    const confirmed =
-        confirm(
+    if (
+        !confirm(
             "Delete all chat history?"
-        );
-
-
-    if (!confirmed) {
+        )
+    ) {
         return;
     }
 
-
     chats = [];
 
-    currentChatId = null;
+    currentChatId =
+        null;
 
     messages = [];
 
     saveChats();
 
     newChat();
-
 }
 
 
-/*
- * Clear current conversation.
- */
-
 function clearCurrentChat() {
-
     messages = [];
-
 
     const chat =
         chats.find(
-            item => item.id === currentChatId
+            item =>
+                item.id ===
+                currentChatId
         );
 
-
     if (chat) {
-
         chat.messages = [];
-
-        chat.title = "New Chat";
-
+        chat.title =
+            "New Chat";
         chat.updatedAt =
             Date.now();
-
     }
-
 
     saveChats();
 
     renderHistory();
 
     renderMessages();
-
 }
 
-
-/*
- * Chat model filtering.
- */
 
 document
     .getElementById("provider")
@@ -1163,148 +1102,98 @@ document
 
 
 function refreshModels() {
-
     const provider =
         document.getElementById(
             "provider"
         ).value;
 
-
     const list =
-        allModels.filter(model =>
-            provider === "all" ||
-            model.company === provider
+        allModels.filter(
+            model =>
+                provider ===
+                    "all" ||
+                model.company ===
+                    provider
         );
-
 
     const select =
         document.getElementById(
             "chatModel"
         );
 
-
     const current =
         select.value;
 
-
     select.innerHTML =
-        list.map(model =>
-            `<option value="${esc(model.id)}">${esc(model.id)}</option>`
+        list.map(
+            model =>
+                `<option value="${esc(model.id)}">${esc(model.id)}</option>`
         ).join("");
-
 
     if (
         [...select.options]
             .some(
                 option =>
-                    option.value === current
+                    option.value ===
+                    current
             )
     ) {
-
         select.value =
             current;
-
     }
-
 
     if (!list.length) {
-
         select.innerHTML =
             '<option value="gpt-6-astra">gpt-6-astra</option>';
-
     }
-
-
-    if (currentChatId) {
-
-        const chat =
-            chats.find(
-                item =>
-                    item.id === currentChatId
-            );
-
-
-        if (chat) {
-
-            chat.model =
-                select.value;
-
-            saveChats();
-
-        }
-
-    }
-
 }
 
 
-/*
- * Send chat message.
- */
-
 async function sendMessage() {
-
     const input =
         document.getElementById(
             "chatInput"
         );
 
-
     const text =
         input.value.trim();
-
 
     if (!text) {
         return;
     }
 
-
     if (!currentChatId) {
-
         newChat();
-
     }
-
 
     const model =
         document.getElementById(
             "chatModel"
         ).value;
 
-
     addMsg(
         "user",
         text
     );
 
-
     input.value = "";
 
-
     messages.push({
-
         role: "user",
-
         content: text
-
     });
 
-
     saveCurrentChat();
-
 
     const status =
         document.getElementById(
             "chatStatus"
         );
 
-
     status.textContent =
         "Generating...";
 
-
     try {
-
         const data =
             await api(
                 "chat",
@@ -1314,30 +1203,22 @@ async function sendMessage() {
                 }
             );
 
-
         const answer =
             data.choices?.[0]
                 ?.message?.content ||
             "No response.";
-
 
         addMsg(
             "assistant",
             answer
         );
 
-
         messages.push({
-
             role: "assistant",
-
             content: answer
-
         });
 
-
         saveCurrentChat();
-
 
         status.textContent =
             "Done.";
@@ -1346,88 +1227,282 @@ async function sendMessage() {
 
         addMsg(
             "assistant",
-            "Error: " + error.message
+            "Error: " +
+                error.message
         );
-
 
         status.textContent =
             "Failed.";
-
     }
-
 }
 
 
-/*
- * Add message to UI.
- */
-
-function addMsg(role, text) {
-
+function addMsg(
+    role,
+    text
+) {
     const div =
         document.createElement(
             "div"
         );
 
-
     div.className =
         "msg " + role;
 
-
     div.textContent =
         text;
-
 
     const box =
         document.getElementById(
             "chatBox"
         );
 
-
     box.appendChild(div);
-
 
     box.scrollTop =
         box.scrollHeight;
-
 }
 
 
 /*
- * Image generation.
+ * Load image-capable models.
  */
+async function loadImageModels() {
+
+    const imageSelect =
+        document.getElementById(
+            "imageModel"
+        );
+
+    const editSelect =
+        document.getElementById(
+            "editModel"
+        );
+
+    imageSelect.innerHTML =
+        "<option>Loading...</option>";
+
+    editSelect.innerHTML =
+        "<option>Loading...</option>";
+
+    try {
+
+        const data =
+            await api(
+                "imageModels"
+            );
+
+        imageModels =
+            Array.isArray(
+                data.data
+            )
+                ? data.data
+                : [];
+
+        if (!imageModels.length) {
+
+            imageSelect.innerHTML =
+                '<option value="">No image models detected</option>';
+
+            editSelect.innerHTML =
+                '<option value="">No image models detected</option>';
+
+            return;
+        }
+
+        renderImageModelSelects();
+
+    } catch (error) {
+
+        const message =
+            "Failed to load image models: " +
+            error.message;
+
+        imageSelect.innerHTML =
+            `<option value="">${esc(message)}</option>`;
+
+        editSelect.innerHTML =
+            `<option value="">${esc(message)}</option>`;
+    }
+}
+
+
+function renderImageModelSelects() {
+
+    const imageSelect =
+        document.getElementById(
+            "imageModel"
+        );
+
+    const editSelect =
+        document.getElementById(
+            "editModel"
+        );
+
+    imageSelect.innerHTML =
+        imageModels
+            .map(model =>
+                `<option value="${esc(model.id)}">${esc(model.id)}${model.company ? " — " + esc(model.company) : ""}</option>`
+            )
+            .join("");
+
+    const editableModels =
+        imageModels.filter(
+            model =>
+                model.supports_edit
+        );
+
+    editSelect.innerHTML =
+        (
+            editableModels.length
+                ? editableModels
+                : imageModels
+        )
+            .map(model =>
+                `<option value="${esc(model.id)}">${esc(model.id)}${model.company ? " — " + esc(model.company) : ""}</option>`
+            )
+            .join("");
+
+    updateImageModelInfo();
+
+    updateEditModelInfo();
+}
+
+
+function updateImageModelInfo() {
+
+    const modelId =
+        document.getElementById(
+            "imageModel"
+        ).value;
+
+    const model =
+        imageModels.find(
+            item =>
+                item.id ===
+                modelId
+        );
+
+    const box =
+        document.getElementById(
+            "imageModelInfo"
+        );
+
+    if (!model) {
+        box.textContent = "";
+        return;
+    }
+
+    box.textContent =
+        "Provider: " +
+        (model.company ||
+            "Unknown") +
+        " | Generation: supported" +
+        (model.supports_edit
+            ? " | Edit: supported"
+            : "");
+}
+
+
+function updateEditModelInfo() {
+
+    const modelId =
+        document.getElementById(
+            "editModel"
+        ).value;
+
+    const model =
+        imageModels.find(
+            item =>
+                item.id ===
+                modelId
+        );
+
+    const box =
+        document.getElementById(
+            "editModelInfo"
+        );
+
+    if (!model) {
+        box.textContent = "";
+        return;
+    }
+
+    box.textContent =
+        "Provider: " +
+        (model.company ||
+            "Unknown") +
+        " | Edit: " +
+        (
+            model.supports_edit
+                ? "supported"
+                : "not confirmed"
+        );
+}
+
+
+document
+    .getElementById(
+        "imageModel"
+    )
+    .addEventListener(
+        "change",
+        updateImageModelInfo
+    );
+
+
+document
+    .getElementById(
+        "editModel"
+    )
+    .addEventListener(
+        "change",
+        updateEditModelInfo
+    );
+
 
 async function generateImage() {
+
+    const model =
+        document.getElementById(
+            "imageModel"
+        ).value;
 
     const prompt =
         document.getElementById(
             "imagePrompt"
         ).value.trim();
 
-
-    if (!prompt) {
+    if (!model) {
+        showStatus(
+            "imageStatus",
+            "No image model selected."
+        );
         return;
     }
 
+    if (!prompt) {
+        showStatus(
+            "imageStatus",
+            "Please enter a prompt."
+        );
+        return;
+    }
 
     const status =
         document.getElementById(
             "imageStatus"
         );
 
-
     const output =
         document.getElementById(
             "imageResult"
         );
 
-
     status.textContent =
         "Generating...";
 
-
     output.innerHTML = "";
-
 
     try {
 
@@ -1435,52 +1510,43 @@ async function generateImage() {
             await api(
                 "image",
                 {
-
-                    model:
-                        "grok-imagine-image",
-
+                    model,
                     prompt,
-
+                    n: 1,
                     size:
                         document.getElementById(
                             "imageSize"
                         ).value,
-
                     quality:
                         document.getElementById(
                             "imageQuality"
-                        ).value
-
+                        ).value,
+                    response_format:
+                        "b64_json"
                 }
             );
-
 
         const item =
             data.data?.[0];
 
-
         if (item?.url) {
 
             output.innerHTML =
-                `<img src="${item.url}" alt="Generated image">`;
+                `<img src="${esc(item.url)}" alt="Generated image">`;
 
-        }
-
-        else if (item?.b64_json) {
+        } else if (
+            item?.b64_json
+        ) {
 
             output.innerHTML =
                 `<img src="data:image/png;base64,${item.b64_json}" alt="Generated image">`;
 
-        }
-
-        else {
+        } else {
 
             throw new Error(
                 "No image returned."
             );
-
         }
-
 
         status.textContent =
             "Done.";
@@ -1489,15 +1555,9 @@ async function generateImage() {
 
         status.innerHTML =
             `<div class="error">${esc(error.message)}</div>`;
-
     }
-
 }
 
-
-/*
- * Image preview.
- */
 
 function previewEditImage() {
 
@@ -1506,75 +1566,87 @@ function previewEditImage() {
             "editFile"
         ).files[0];
 
-
     const image =
         document.getElementById(
             "editPreview"
         );
 
-
     if (!file) {
+        image.hidden =
+            true;
         return;
     }
 
-
     image.src =
-        URL.createObjectURL(file);
-
+        URL.createObjectURL(
+            file
+        );
 
     image.hidden =
         false;
-
 }
 
 
-/*
- * Image edit.
- */
-
 async function editImage() {
+
+    const model =
+        document.getElementById(
+            "editModel"
+        ).value;
 
     const file =
         document.getElementById(
             "editFile"
         ).files[0];
 
-
     const prompt =
         document.getElementById(
             "editPrompt"
         ).value.trim();
 
-
-    if (!file || !prompt) {
+    if (!model) {
+        showStatus(
+            "editStatus",
+            "No image model selected."
+        );
         return;
     }
 
+    if (!file) {
+        showStatus(
+            "editStatus",
+            "Please select an image."
+        );
+        return;
+    }
+
+    if (!prompt) {
+        showStatus(
+            "editStatus",
+            "Please enter an edit prompt."
+        );
+        return;
+    }
 
     const status =
         document.getElementById(
             "editStatus"
         );
 
-
     const output =
         document.getElementById(
             "editResult"
         );
 
-
     status.textContent =
         "Editing...";
 
-
     output.innerHTML = "";
-
 
     try {
 
         const formData =
             new FormData();
-
 
         formData.append(
             "image",
@@ -1582,18 +1654,15 @@ async function editImage() {
             file.name
         );
 
-
         formData.append(
             "prompt",
             prompt
         );
 
-
         formData.append(
             "model",
-            "grok-imagine-image"
+            model
         );
-
 
         const response =
             await fetch(
@@ -1604,88 +1673,48 @@ async function editImage() {
                 }
             );
 
-
         const text =
             await response.text();
 
-
         let data;
 
-
         try {
-
             data =
                 JSON.parse(text);
-
         } catch {
-
             throw new Error(
                 text ||
                 `HTTP ${response.status}`
             );
-
         }
-
 
         if (!response.ok) {
-
-            const error =
-                data.error;
-
-
-            if (typeof error === "string") {
-
-                throw new Error(error);
-
-            }
-
-
-            if (error?.message) {
-
-                throw new Error(
-                    error.message
-                );
-
-            }
-
-
             throw new Error(
-                JSON.stringify(
-                    data,
-                    null,
-                    2
-                )
+                extractError(data)
             );
-
         }
-
 
         const item =
             data.data?.[0];
 
-
         if (item?.url) {
 
             output.innerHTML =
-                `<img src="${item.url}" alt="Edited image">`;
+                `<img src="${esc(item.url)}" alt="Edited image">`;
 
-        }
-
-        else if (item?.b64_json) {
+        } else if (
+            item?.b64_json
+        ) {
 
             output.innerHTML =
                 `<img src="data:image/png;base64,${item.b64_json}" alt="Edited image">`;
 
-        }
-
-        else {
+        } else {
 
             throw new Error(
                 "No edited image returned."
             );
-
         }
-
 
         status.textContent =
             "Done.";
@@ -1694,15 +1723,9 @@ async function editImage() {
 
         status.innerHTML =
             `<div class="error">${esc(error.message)}</div>`;
-
     }
-
 }
 
-
-/*
- * Load models.
- */
 
 async function loadModels() {
 
@@ -1711,80 +1734,95 @@ async function loadModels() {
             "modelStatus"
         );
 
+    const list =
+        document.getElementById(
+            "modelList"
+        );
+
+    status.textContent =
+        "Loading...";
+
+    list.innerHTML = "";
 
     try {
 
-        status.textContent =
-            "Loading...";
-
-
         const data =
-            await api("models");
-
+            await api(
+                "models"
+            );
 
         allModels =
             data.data || [];
 
-
         refreshModels();
 
+        list.innerHTML =
+            allModels.map(
+                model => {
 
-        document.getElementById(
-            "modelList"
-        ).innerHTML =
+                    const capabilities = [];
 
-            allModels.map(model => {
+                    if (
+                        model.supports_vision
+                    ) {
+                        capabilities.push(
+                            "vision"
+                        );
+                    }
 
-                const capabilities = [];
+                    if (
+                        model.supports_reasoning
+                    ) {
+                        capabilities.push(
+                            "reasoning"
+                        );
+                    }
 
+                    if (
+                        model.supports_tools
+                    ) {
+                        capabilities.push(
+                            "tools"
+                        );
+                    }
 
-                if (model.supports_vision) {
+                    if (
+                        isLikelyImageModel(
+                            model
+                        )
+                    ) {
+                        capabilities.push(
+                            "image"
+                        );
+                    }
 
-                    capabilities.push(
-                        "vision"
-                    );
+                    return `
+                        <div class="model">
 
+                            <div class="model-title">
+                                ${esc(model.id)}
+                            </div>
+
+                            <div>
+                                ${esc(
+                                    model.company ||
+                                    model.provider ||
+                                    ""
+                                )}
+                            </div>
+
+                            <div class="model-capabilities">
+                                ${esc(
+                                    capabilities.join(
+                                        " · "
+                                    )
+                                )}
+                            </div>
+
+                        </div>
+                    `;
                 }
-
-
-                if (model.supports_reasoning) {
-
-                    capabilities.push(
-                        "reasoning"
-                    );
-
-                }
-
-
-                if (model.supports_tools) {
-
-                    capabilities.push(
-                        "tools"
-                    );
-
-                }
-
-
-                return `
-                    <div class="model">
-
-                        <b>
-                            ${esc(model.id)}
-                        </b>
-
-                        <br>
-
-                        ${esc(model.company || "")}
-
-                        <br>
-
-                        ${capabilities.join(" · ")}
-
-                    </div>
-                `;
-
-            }).join("");
-
+            ).join("");
 
         status.textContent =
             `${allModels.length} models loaded.`;
@@ -1794,15 +1832,74 @@ async function loadModels() {
         status.textContent =
             "Error: " +
             error.message;
-
     }
-
 }
 
 
-/*
- * Escape HTML.
- */
+function isLikelyImageModel(
+    model
+) {
+    const id =
+        String(
+            model.id || ""
+        ).toLowerCase();
+
+    const text =
+        JSON.stringify(
+            model
+        ).toLowerCase();
+
+    if (
+        text.includes(
+            "image_generation"
+        ) ||
+        text.includes(
+            "image-generation"
+        ) ||
+        text.includes(
+            "text-to-image"
+        )
+    ) {
+        return true;
+    }
+
+    const patterns = [
+        "grok-imagine",
+        "gpt-image",
+        "dall-e",
+        "nano-banana",
+        "gemini-image",
+        "seedream",
+        "flux",
+        "qwen-image",
+        "firefly",
+        "midjourney",
+        "stable-diffusion",
+        "sdxl",
+        "ideogram",
+        "imagen"
+    ];
+
+    return patterns.some(
+        pattern =>
+            id.includes(pattern)
+    );
+}
+
+
+function showStatus(
+    id,
+    message
+) {
+    const element =
+        document.getElementById(
+            id
+        );
+
+    element.textContent =
+        message;
+}
+
 
 function esc(value) {
 
@@ -1811,23 +1908,19 @@ function esc(value) {
             "div"
         );
 
-
     div.textContent =
-        value ?? "";
-
+        value ??
+        "";
 
     return div.innerHTML;
-
 }
 
-
-/*
- * Initial startup.
- */
 
 loadChats();
 
 loadModels();
+
+loadImageModels();
 
 </script>
 
