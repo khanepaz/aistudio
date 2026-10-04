@@ -1,84 +1,793 @@
-<!doctype html>
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>AI Studio</title>
+
 <style>
-:root{font-family:Inter,Segoe UI,Arial,sans-serif;color:#171717;background:#f4f5f7}
-*{box-sizing:border-box}body{margin:0}header{height:62px;background:#111;color:#fff;display:flex;align-items:center;padding:0 22px;font-weight:700}
-.app{display:flex;min-height:calc(100vh - 62px)}aside{width:220px;background:#1b1b1d;padding:14px}
-.tab{width:100%;border:0;background:transparent;color:#cfcfd2;text-align:left;padding:12px 14px;border-radius:10px;margin-bottom:7px;cursor:pointer}.tab.active,.tab:hover{background:#343437;color:#fff}
-main{flex:1;max-width:1200px;padding:24px;margin:auto}.panel{display:none}.panel.active{display:block}.card{background:#fff;border-radius:16px;padding:20px;margin-bottom:18px;box-shadow:0 4px 20px #0000000b}
-h2{margin:0 0 18px}label{display:block;font-size:13px;font-weight:700;margin:0 0 7px}
-input,select,textarea{width:100%;border:1px solid #ddd;border-radius:9px;padding:11px 12px;margin-bottom:14px;font:inherit}textarea{min-height:120px;resize:vertical}
-button.action{border:0;background:#111;color:#fff;border-radius:9px;padding:11px 17px;cursor:pointer}button.secondary{border:1px solid #ddd;background:#fff;color:#111;border-radius:9px;padding:10px 14px;cursor:pointer}
-.status{font-size:13px;color:#666;margin-top:10px;white-space:pre-wrap}.chat{height:460px;overflow:auto;background:#f7f7f8;border-radius:12px;padding:14px;margin-bottom:14px}
-.msg{max-width:86%;padding:11px 14px;border-radius:13px;margin:0 0 10px;white-space:pre-wrap;line-height:1.6}.msg.user{margin-left:auto;background:#dfeeff}.msg.assistant{background:#fff;border:1px solid #e8e8e8}
-.row{display:grid;grid-template-columns:1fr 1fr;gap:14px}.image-result img{display:block;max-width:100%;max-height:720px;border-radius:12px;margin-top:16px}
-.error{background:#fff0f0;color:#a40018;border-radius:9px;padding:12px;white-space:pre-wrap}.models{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:10px}.model{background:#f7f7f8;border-radius:10px;padding:12px;font-size:13px}
-.drop{border:2px dashed #ccc;border-radius:12px;padding:24px;text-align:center;margin-bottom:14px}.preview{max-width:280px;max-height:240px;border-radius:10px;margin-top:12px}
-@media(max-width:700px){aside{width:150px}.row{grid-template-columns:1fr}main{padding:14px}}
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f5f5f5;
+    color: #222;
+}
+
+header {
+    background: #111;
+    color: white;
+    padding: 18px 24px;
+}
+
+header h1 {
+    margin: 0;
+    font-size: 24px;
+}
+
+.container {
+    max-width: 1100px;
+    margin: 20px auto;
+    padding: 0 16px;
+}
+
+.tabs {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 16px;
+}
+
+.tab {
+    border: 0;
+    background: #ddd;
+    padding: 10px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.tab.active {
+    background: #111;
+    color: white;
+}
+
+.panel {
+    display: none;
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 2px 10px rgba(0,0,0,.08);
+}
+
+.panel.active {
+    display: block;
+}
+
+label {
+    display: block;
+    margin-top: 12px;
+    margin-bottom: 6px;
+    font-weight: bold;
+}
+
+select,
+textarea,
+input[type="file"],
+input[type="text"] {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 15px;
+}
+
+textarea {
+    min-height: 120px;
+    resize: vertical;
+}
+
+button.action {
+    margin-top: 12px;
+    padding: 10px 18px;
+    border: 0;
+    border-radius: 8px;
+    background: #111;
+    color: white;
+    cursor: pointer;
+}
+
+button.action:hover {
+    opacity: .85;
+}
+
+.status {
+    margin-top: 12px;
+    color: #555;
+}
+
+.chat-box {
+    height: 420px;
+    overflow-y: auto;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 12px;
+    margin-bottom: 12px;
+    background: #fafafa;
+}
+
+.msg {
+    padding: 10px 12px;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    white-space: pre-wrap;
+}
+
+.msg.user {
+    background: #e5e5e5;
+}
+
+.msg.assistant {
+    background: #dff0ff;
+}
+
+.image-result img {
+    max-width: 100%;
+    margin-top: 16px;
+    border-radius: 10px;
+}
+
+.model {
+    border: 1px solid #ddd;
+    padding: 12px;
+    margin-bottom: 8px;
+    border-radius: 8px;
+    background: #fafafa;
+}
+
+.error {
+    color: #b00020;
+    margin-top: 10px;
+    white-space: pre-wrap;
+}
+
+.preview {
+    max-width: 100%;
+    max-height: 400px;
+    margin-top: 12px;
+    border-radius: 10px;
+}
 </style>
 </head>
+
 <body>
-<header>AI Studio</header>
-<div class="app">
-<aside>
-<button class="tab active" data-tab="chat">Chat</button>
-<button class="tab" data-tab="imagine">Grok Imagine</button>
-<button class="tab" data-tab="edit">Image Edit</button>
-<button class="tab" data-tab="models">Models</button>
-</aside>
-<main>
-<section id="chat" class="panel active"><div class="card">
-<h2>AI Chat</h2>
-<div class="row">
-<div><label>Provider</label><select id="provider" onchange="refreshModels()">
-<option value="all">All</option><option value="OpenAI">OpenAI</option><option value="Anthropic">Anthropic</option><option value="xAI">xAI</option><option value="Google">Google</option><option value="DeepSeek">DeepSeek</option><option value="Alibaba">Alibaba</option><option value="Moonshot AI">Moonshot AI</option><option value="Zhipu AI">Zhipu AI</option><option value="MiniMax">MiniMax</option>
-</select></div>
-<div><label>Model</label><select id="chatModel"></select></div>
+
+<header>
+    <h1>AI Studio</h1>
+</header>
+
+<div class="container">
+
+    <div class="tabs">
+        <button class="tab active" data-tab="chat">Chat</button>
+        <button class="tab" data-tab="image">Grok Imagine</button>
+        <button class="tab" data-tab="edit">Image Edit</button>
+        <button class="tab" data-tab="models">Models</button>
+    </div>
+
+    <!-- Chat -->
+    <section id="chat" class="panel active">
+
+        <label for="provider">Provider</label>
+
+        <select id="provider">
+            <option value="all">All</option>
+            <option value="OpenAI">OpenAI</option>
+            <option value="Anthropic">Anthropic</option>
+            <option value="xAI">xAI</option>
+            <option value="Google">Google</option>
+            <option value="DeepSeek">DeepSeek</option>
+            <option value="Alibaba">Alibaba</option>
+            <option value="Moonshot AI">Moonshot AI</option>
+            <option value="Zhipu AI">Zhipu AI</option>
+            <option value="MiniMax">MiniMax</option>
+        </select>
+
+        <label for="chatModel">Model</label>
+
+        <select id="chatModel">
+            <option value="gpt-6-astra">gpt-6-astra</option>
+        </select>
+
+        <div id="chatBox" class="chat-box"></div>
+
+        <textarea
+            id="chatInput"
+            placeholder="Type your message..."
+        ></textarea>
+
+        <button class="action" onclick="sendMessage()">
+            Send
+        </button>
+
+        <button class="action" onclick="clearChat()">
+            Clear
+        </button>
+
+        <div id="chatStatus" class="status"></div>
+
+    </section>
+
+    <!-- Image Generation -->
+    <section id="image" class="panel">
+
+        <label for="imagePrompt">Prompt</label>
+
+        <textarea
+            id="imagePrompt"
+            placeholder="Describe the image you want to generate..."
+        ></textarea>
+
+        <label for="imageSize">Size</label>
+
+        <select id="imageSize">
+            <option value="1024x1024">1024x1024</option>
+            <option value="1792x1024">1792x1024</option>
+            <option value="1024x1792">1024x1792</option>
+        </select>
+
+        <label for="imageQuality">Quality</label>
+
+        <select id="imageQuality">
+            <option value="standard">standard</option>
+            <option value="hd">hd</option>
+        </select>
+
+        <button class="action" onclick="generateImage()">
+            Generate Image
+        </button>
+
+        <div id="imageStatus" class="status"></div>
+
+        <div id="imageResult" class="image-result"></div>
+
+    </section>
+
+    <!-- Image Edit -->
+    <section id="edit" class="panel">
+
+        <label for="editFile">Image</label>
+
+        <input
+            id="editFile"
+            type="file"
+            accept="image/*"
+            onchange="previewEditImage()"
+        >
+
+        <img
+            id="editPreview"
+            class="preview"
+            hidden
+            alt="Preview"
+        >
+
+        <label for="editPrompt">Edit Prompt</label>
+
+        <textarea
+            id="editPrompt"
+            placeholder="Describe how you want to edit the image..."
+        ></textarea>
+
+        <button class="action" onclick="editImage()">
+            Edit Image
+        </button>
+
+        <div id="editStatus" class="status"></div>
+
+        <div id="editResult" class="image-result"></div>
+
+    </section>
+
+    <!-- Models -->
+    <section id="models" class="panel">
+
+        <button class="action" onclick="loadModels()">
+            Load Models
+        </button>
+
+        <div id="modelStatus" class="status"></div>
+
+        <div id="modelList"></div>
+
+    </section>
+
 </div>
-<div id="chatBox" class="chat"></div>
-<textarea id="chatInput" placeholder="Write your message..."></textarea>
-<button class="action" onclick="sendMessage()">Send</button>
-<button class="secondary" onclick="clearChat()">Clear</button>
-<div id="chatStatus" class="status"></div>
-</div></section>
-
-<section id="imagine" class="panel"><div class="card">
-<h2>Grok Imagine</h2><label>Prompt</label>
-<textarea id="imagePrompt" placeholder="Describe the image you want to create..."></textarea>
-<div class="row"><div><label>Size</label><select id="imageSize"><option>1024x1024</option><option>1536x1024</option><option>1024x1536</option></select></div>
-<div><label>Quality</label><select id="imageQuality"><option value="low">Low</option><option value="medium">Medium</option><option value="auto">Auto</option></select></div></div>
-<button class="action" onclick="generateImage()">Generate</button><div id="imageStatus" class="status"></div><div id="imageResult" class="image-result"></div>
-</div></section>
-
-<section id="edit" class="panel"><div class="card">
-<h2>Grok Image Edit</h2><div class="drop"><input id="editFile" type="file" accept="image/*" onchange="previewEditImage()"><img id="editPreview" class="preview" hidden></div>
-<label>Edit instruction</label><textarea id="editPrompt" placeholder="Describe exactly how the image should be changed..."></textarea>
-<button class="action" onclick="editImage()">Edit Image</button><div id="editStatus" class="status"></div><div id="editResult" class="image-result"></div>
-</div></section>
-
-<section id="models" class="panel"><div class="card"><h2>Available Models</h2><button class="action" onclick="loadModels()">Refresh</button><div id="modelStatus" class="status"></div><div id="modelList" class="models"></div></div></section>
-</main></div>
 
 <script>
-const API = "https://aistudio.h-khanepaz.workers.dev";
-let allModels=[],messages=[];
-document.querySelectorAll(".tab").forEach(b=>b.onclick=()=>{document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));document.querySelectorAll(".panel").forEach(x=>x.classList.remove("active"));b.classList.add("active");document.getElementById(b.dataset.tab).classList.add("active")});
-async function api(action,payload={}){const r=await fetch(API,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({action,...payload})});const data=await r.json();if(!r.ok)throw new Error(data.error||JSON.stringify(data));return data}
-async function loadModels(){const s=document.getElementById("modelStatus");try{s.textContent="Loading...";const data=await api("models");allModels=data.data||[];refreshModels();document.getElementById("modelList").innerHTML=allModels.map(m=>{const c=[];if(m.supports_vision)c.push("vision");if(m.supports_reasoning)c.push("reasoning");if(m.supports_tools)c.push("tools");return `<div class="model"><b>${esc(m.id)}</b><br>${esc(m.company||"")}<br>${c.join(" · ")}</div>`}).join("");s.textContent=allModels.length+" models loaded."}catch(e){s.textContent=e.message}}
-function refreshModels(){const p=document.getElementById("provider").value,list=allModels.filter(m=>p==="all"||m.company===p),sel=document.getElementById("chatModel"),cur=sel.value;sel.innerHTML=list.map(m=>`<option value="${esc(m.id)}">${esc(m.id)}</option>`).join("");if([...sel.options].some(o=>o.value===cur))sel.value=cur;if(!list.length)sel.innerHTML='<option value="gpt-6-astra">gpt-6-astra</option>'}
-async function sendMessage(){const input=document.getElementById("chatInput"),text=input.value.trim();if(!text)return;const model=document.getElementById("chatModel").value;addMsg("user",text);input.value="";messages.push({role:"user",content:text});const s=document.getElementById("chatStatus");s.textContent="Generating...";try{const data=await api("chat",{model,messages});const answer=data.choices?.[0]?.message?.content||"No response.";addMsg("assistant",answer);messages.push({role:"assistant",content:answer});s.textContent="Done."}catch(e){addMsg("assistant","Error: "+e.message);s.textContent="Failed."}}
-function addMsg(role,text){const d=document.createElement("div");d.className="msg "+role;d.textContent=text;const box=document.getElementById("chatBox");box.appendChild(d);box.scrollTop=box.scrollHeight}
-function clearChat(){messages=[];document.getElementById("chatBox").innerHTML=""}
-async function generateImage(){const prompt=document.getElementById("imagePrompt").value.trim();if(!prompt)return;const s=document.getElementById("imageStatus"),out=document.getElementById("imageResult");s.textContent="Generating...";out.innerHTML="";try{const data=await api("image",{model:"grok-imagine-image",prompt,size:document.getElementById("imageSize").value,quality:document.getElementById("imageQuality").value});const item=data.data?.[0];if(item?.url)out.innerHTML=`<img src="${item.url}" alt="Generated image">`;else if(item?.b64_json)out.innerHTML=`<img src="data:image/png;base64,${item.b64_json}" alt="Generated image">`;else throw new Error("No image returned.");s.textContent="Done."}catch(e){s.innerHTML='<div class="error">'+esc(e.message)+'</div>'}}
-function previewEditImage(){const f=document.getElementById("editFile").files[0],img=document.getElementById("editPreview");if(!f)return;img.src=URL.createObjectURL(f);img.hidden=false}
-function fileToDataUrl(file){return new Promise((resolve,reject)=>{const r=new FileReader();r.onload=()=>resolve(r.result);r.onerror=reject;r.readAsDataURL(file)})}
-async function editImage(){const file=document.getElementById("editFile").files[0],prompt=document.getElementById("editPrompt").value.trim();if(!file||!prompt)return;const s=document.getElementById("editStatus"),out=document.getElementById("editResult");s.textContent="Editing...";out.innerHTML="";try{const image=await fileToDataUrl(file);const data=await api("edit",{model:"grok-imagine-image",prompt,image});const item=data.data?.[0];if(item?.url)out.innerHTML=`<img src="${item.url}" alt="Edited image">`;else if(item?.b64_json)out.innerHTML=`<img src="data:image/png;base64,${item.b64_json}" alt="Edited image">`;else throw new Error("No image returned.");s.textContent="Done."}catch(e){s.innerHTML='<div class="error">'+esc(e.message)+'</div>'}}
-function esc(v){const d=document.createElement("div");d.textContent=v??"";return d.innerHTML}
+
+/*
+ * Frontend is hosted on GitHub Pages.
+ * API requests are sent to the Netlify Function.
+ */
+const API = "https://myhamed.netlify.app/.netlify/functions/ai";
+
+let allModels = [];
+let messages = [];
+
+
+/* Tabs */
+
+document.querySelectorAll(".tab").forEach(button => {
+
+    button.addEventListener("click", () => {
+
+        document.querySelectorAll(".tab")
+            .forEach(item => item.classList.remove("active"));
+
+        document.querySelectorAll(".panel")
+            .forEach(item => item.classList.remove("active"));
+
+        button.classList.add("active");
+
+        document
+            .getElementById(button.dataset.tab)
+            .classList.add("active");
+    });
+
+});
+
+
+/* API */
+
+async function api(action, payload = {}) {
+
+    const response = await fetch(API, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            action,
+            payload
+        })
+    });
+
+    const text = await response.text();
+
+    let data;
+
+    try {
+        data = JSON.parse(text);
+    } catch {
+        throw new Error(text || `HTTP ${response.status}`);
+    }
+
+    if (!response.ok) {
+        throw new Error(
+            data.error ||
+            data.message ||
+            JSON.stringify(data)
+        );
+    }
+
+    return data;
+}
+
+
+/* Models */
+
+async function loadModels() {
+
+    const status = document.getElementById("modelStatus");
+
+    try {
+
+        status.textContent = "Loading...";
+
+        const data = await api("models");
+
+        allModels = data.data || [];
+
+        refreshModels();
+
+        document.getElementById("modelList").innerHTML =
+            allModels.map(model => {
+
+                const capabilities = [];
+
+                if (model.supports_vision) {
+                    capabilities.push("vision");
+                }
+
+                if (model.supports_reasoning) {
+                    capabilities.push("reasoning");
+                }
+
+                if (model.supports_tools) {
+                    capabilities.push("tools");
+                }
+
+                return `
+                    <div class="model">
+                        <b>${esc(model.id)}</b>
+                        <br>
+                        ${esc(model.company || "")}
+                        <br>
+                        ${capabilities.join(" · ")}
+                    </div>
+                `;
+
+            }).join("");
+
+        status.textContent =
+            `${allModels.length} models loaded.`;
+
+    } catch (error) {
+
+        status.textContent =
+            "Error: " + error.message;
+
+    }
+
+}
+
+
+/* Provider filter */
+
+document
+    .getElementById("provider")
+    .addEventListener("change", refreshModels);
+
+
+function refreshModels() {
+
+    const provider =
+        document.getElementById("provider").value;
+
+    const list = allModels.filter(model =>
+        provider === "all" ||
+        model.company === provider
+    );
+
+    const select =
+        document.getElementById("chatModel");
+
+    const current = select.value;
+
+    select.innerHTML = list.map(model =>
+        `<option value="${esc(model.id)}">${esc(model.id)}</option>`
+    ).join("");
+
+    if (
+        [...select.options]
+            .some(option => option.value === current)
+    ) {
+
+        select.value = current;
+
+    }
+
+    if (!list.length) {
+
+        select.innerHTML =
+            '<option value="gpt-6-astra">gpt-6-astra</option>';
+
+    }
+
+}
+
+
+/* Chat */
+
+async function sendMessage() {
+
+    const input =
+        document.getElementById("chatInput");
+
+    const text =
+        input.value.trim();
+
+    if (!text) {
+        return;
+    }
+
+    const model =
+        document.getElementById("chatModel").value;
+
+    addMsg("user", text);
+
+    input.value = "";
+
+    messages.push({
+        role: "user",
+        content: text
+    });
+
+    const status =
+        document.getElementById("chatStatus");
+
+    status.textContent = "Generating...";
+
+    try {
+
+        const data = await api("chat", {
+            model,
+            messages
+        });
+
+        const answer =
+            data.choices?.[0]?.message?.content ||
+            "No response.";
+
+        addMsg("assistant", answer);
+
+        messages.push({
+            role: "assistant",
+            content: answer
+        });
+
+        status.textContent = "Done.";
+
+    } catch (error) {
+
+        addMsg(
+            "assistant",
+            "Error: " + error.message
+        );
+
+        status.textContent = "Failed.";
+
+    }
+
+}
+
+
+function addMsg(role, text) {
+
+    const div =
+        document.createElement("div");
+
+    div.className =
+        "msg " + role;
+
+    div.textContent = text;
+
+    const box =
+        document.getElementById("chatBox");
+
+    box.appendChild(div);
+
+    box.scrollTop = box.scrollHeight;
+
+}
+
+
+function clearChat() {
+
+    messages = [];
+
+    document.getElementById("chatBox")
+        .innerHTML = "";
+
+    document.getElementById("chatStatus")
+        .textContent = "";
+
+}
+
+
+/* Image generation */
+
+async function generateImage() {
+
+    const prompt =
+        document.getElementById("imagePrompt")
+            .value.trim();
+
+    if (!prompt) {
+        return;
+    }
+
+    const status =
+        document.getElementById("imageStatus");
+
+    const output =
+        document.getElementById("imageResult");
+
+    status.textContent = "Generating...";
+
+    output.innerHTML = "";
+
+    try {
+
+        const data = await api("image", {
+
+            model: "grok-imagine-image",
+
+            prompt,
+
+            size:
+                document.getElementById("imageSize")
+                    .value,
+
+            quality:
+                document.getElementById("imageQuality")
+                    .value
+
+        });
+
+        const item =
+            data.data?.[0];
+
+        if (item?.url) {
+
+            output.innerHTML =
+                `<img src="${item.url}" alt="Generated image">`;
+
+        } else if (item?.b64_json) {
+
+            output.innerHTML =
+                `<img src="data:image/png;base64,${item.b64_json}" alt="Generated image">`;
+
+        } else {
+
+            throw new Error("No image returned.");
+
+        }
+
+        status.textContent = "Done.";
+
+    } catch (error) {
+
+        status.innerHTML =
+            `<div class="error">${esc(error.message)}</div>`;
+
+    }
+
+}
+
+
+/* Image preview */
+
+function previewEditImage() {
+
+    const file =
+        document.getElementById("editFile")
+            .files[0];
+
+    const image =
+        document.getElementById("editPreview");
+
+    if (!file) {
+        return;
+    }
+
+    image.src =
+        URL.createObjectURL(file);
+
+    image.hidden = false;
+
+}
+
+
+/* Convert image to Data URL */
+
+function fileToDataUrl(file) {
+
+    return new Promise((resolve, reject) => {
+
+        const reader =
+            new FileReader();
+
+        reader.onload = () =>
+            resolve(reader.result);
+
+        reader.onerror = reject;
+
+        reader.readAsDataURL(file);
+
+    });
+
+}
+
+
+/* Image edit */
+
+async function editImage() {
+
+    const file =
+        document.getElementById("editFile")
+            .files[0];
+
+    const prompt =
+        document.getElementById("editPrompt")
+            .value.trim();
+
+    if (!file || !prompt) {
+        return;
+    }
+
+    const status =
+        document.getElementById("editStatus");
+
+    const output =
+        document.getElementById("editResult");
+
+    status.textContent = "Editing...";
+
+    output.innerHTML = "";
+
+    try {
+
+        const image =
+            await fileToDataUrl(file);
+
+        const data =
+            await api("edit", {
+
+                model: "grok-imagine-image",
+
+                prompt,
+
+                image
+
+            });
+
+        const item =
+            data.data?.[0];
+
+        if (item?.url) {
+
+            output.innerHTML =
+                `<img src="${item.url}" alt="Edited image">`;
+
+        } else if (item?.b64_json) {
+
+            output.innerHTML =
+                `<img src="data:image/png;base64,${item.b64_json}" alt="Edited image">`;
+
+        } else {
+
+            throw new Error("No image returned.");
+
+        }
+
+        status.textContent = "Done.";
+
+    } catch (error) {
+
+        status.innerHTML =
+            `<div class="error">${esc(error.message)}</div>`;
+
+    }
+
+}
+
+
+/* HTML escaping */
+
+function esc(value) {
+
+    const div =
+        document.createElement("div");
+
+    div.textContent =
+        value ?? "";
+
+    return div.innerHTML;
+
+}
+
+
+/* Initial model loading */
+
 loadModels();
+
 </script>
+
 </body>
 </html>
+
