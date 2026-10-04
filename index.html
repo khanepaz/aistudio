@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AI Studio</title>
+<style>
+:root{font-family:Inter,Segoe UI,Arial,sans-serif;color:#171717;background:#f4f5f7}
+*{box-sizing:border-box}body{margin:0}header{height:62px;background:#111;color:#fff;display:flex;align-items:center;padding:0 22px;font-weight:700}
+.app{display:flex;min-height:calc(100vh - 62px)}aside{width:220px;background:#1b1b1d;padding:14px}
+.tab{width:100%;border:0;background:transparent;color:#cfcfd2;text-align:left;padding:12px 14px;border-radius:10px;margin-bottom:7px;cursor:pointer}.tab.active,.tab:hover{background:#343437;color:#fff}
+main{flex:1;max-width:1200px;padding:24px;margin:auto}.panel{display:none}.panel.active{display:block}.card{background:#fff;border-radius:16px;padding:20px;margin-bottom:18px;box-shadow:0 4px 20px #0000000b}
+h2{margin:0 0 18px}label{display:block;font-size:13px;font-weight:700;margin:0 0 7px}
+input,select,textarea{width:100%;border:1px solid #ddd;border-radius:9px;padding:11px 12px;margin-bottom:14px;font:inherit}textarea{min-height:120px;resize:vertical}
+button.action{border:0;background:#111;color:#fff;border-radius:9px;padding:11px 17px;cursor:pointer}button.secondary{border:1px solid #ddd;background:#fff;color:#111;border-radius:9px;padding:10px 14px;cursor:pointer}
+.status{font-size:13px;color:#666;margin-top:10px;white-space:pre-wrap}.chat{height:460px;overflow:auto;background:#f7f7f8;border-radius:12px;padding:14px;margin-bottom:14px}
+.msg{max-width:86%;padding:11px 14px;border-radius:13px;margin:0 0 10px;white-space:pre-wrap;line-height:1.6}.msg.user{margin-left:auto;background:#dfeeff}.msg.assistant{background:#fff;border:1px solid #e8e8e8}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:14px}.image-result img{display:block;max-width:100%;max-height:720px;border-radius:12px;margin-top:16px}
+.error{background:#fff0f0;color:#a40018;border-radius:9px;padding:12px;white-space:pre-wrap}.models{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:10px}.model{background:#f7f7f8;border-radius:10px;padding:12px;font-size:13px}
+.drop{border:2px dashed #ccc;border-radius:12px;padding:24px;text-align:center;margin-bottom:14px}.preview{max-width:280px;max-height:240px;border-radius:10px;margin-top:12px}
+@media(max-width:700px){aside{width:150px}.row{grid-template-columns:1fr}main{padding:14px}}
+</style>
+</head>
+<body>
+<header>AI Studio</header>
+<div class="app">
+<aside>
+<button class="tab active" data-tab="chat">Chat</button>
+<button class="tab" data-tab="imagine">Grok Imagine</button>
+<button class="tab" data-tab="edit">Image Edit</button>
+<button class="tab" data-tab="models">Models</button>
+</aside>
+<main>
+<section id="chat" class="panel active"><div class="card">
+<h2>AI Chat</h2>
+<div class="row">
+<div><label>Provider</label><select id="provider" onchange="refreshModels()">
+<option value="all">All</option><option value="OpenAI">OpenAI</option><option value="Anthropic">Anthropic</option><option value="xAI">xAI</option><option value="Google">Google</option><option value="DeepSeek">DeepSeek</option><option value="Alibaba">Alibaba</option><option value="Moonshot AI">Moonshot AI</option><option value="Zhipu AI">Zhipu AI</option><option value="MiniMax">MiniMax</option>
+</select></div>
+<div><label>Model</label><select id="chatModel"></select></div>
+</div>
+<div id="chatBox" class="chat"></div>
+<textarea id="chatInput" placeholder="Write your message..."></textarea>
+<button class="action" onclick="sendMessage()">Send</button>
+<button class="secondary" onclick="clearChat()">Clear</button>
+<div id="chatStatus" class="status"></div>
+</div></section>
+
+<section id="imagine" class="panel"><div class="card">
+<h2>Grok Imagine</h2><label>Prompt</label>
+<textarea id="imagePrompt" placeholder="Describe the image you want to create..."></textarea>
+<div class="row"><div><label>Size</label><select id="imageSize"><option>1024x1024</option><option>1536x1024</option><option>1024x1536</option></select></div>
+<div><label>Quality</label><select id="imageQuality"><option value="low">Low</option><option value="medium">Medium</option><option value="auto">Auto</option></select></div></div>
+<button class="action" onclick="generateImage()">Generate</button><div id="imageStatus" class="status"></div><div id="imageResult" class="image-result"></div>
+</div></section>
+
+<section id="edit" class="panel"><div class="card">
+<h2>Grok Image Edit</h2><div class="drop"><input id="editFile" type="file" accept="image/*" onchange="previewEditImage()"><img id="editPreview" class="preview" hidden></div>
+<label>Edit instruction</label><textarea id="editPrompt" placeholder="Describe exactly how the image should be changed..."></textarea>
+<button class="action" onclick="editImage()">Edit Image</button><div id="editStatus" class="status"></div><div id="editResult" class="image-result"></div>
+</div></section>
+
+<section id="models" class="panel"><div class="card"><h2>Available Models</h2><button class="action" onclick="loadModels()">Refresh</button><div id="modelStatus" class="status"></div><div id="modelList" class="models"></div></div></section>
+</main></div>
+
+<script>
+const API="/api/ai";
+let allModels=[],messages=[];
+document.querySelectorAll(".tab").forEach(b=>b.onclick=()=>{document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));document.querySelectorAll(".panel").forEach(x=>x.classList.remove("active"));b.classList.add("active");document.getElementById(b.dataset.tab).classList.add("active")});
+async function api(action,payload={}){const r=await fetch(API,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({action,...payload})});const data=await r.json();if(!r.ok)throw new Error(data.error||JSON.stringify(data));return data}
+async function loadModels(){const s=document.getElementById("modelStatus");try{s.textContent="Loading...";const data=await api("models");allModels=data.data||[];refreshModels();document.getElementById("modelList").innerHTML=allModels.map(m=>{const c=[];if(m.supports_vision)c.push("vision");if(m.supports_reasoning)c.push("reasoning");if(m.supports_tools)c.push("tools");return `<div class="model"><b>${esc(m.id)}</b><br>${esc(m.company||"")}<br>${c.join(" · ")}</div>`}).join("");s.textContent=allModels.length+" models loaded."}catch(e){s.textContent=e.message}}
+function refreshModels(){const p=document.getElementById("provider").value,list=allModels.filter(m=>p==="all"||m.company===p),sel=document.getElementById("chatModel"),cur=sel.value;sel.innerHTML=list.map(m=>`<option value="${esc(m.id)}">${esc(m.id)}</option>`).join("");if([...sel.options].some(o=>o.value===cur))sel.value=cur;if(!list.length)sel.innerHTML='<option value="gpt-6-astra">gpt-6-astra</option>'}
+async function sendMessage(){const input=document.getElementById("chatInput"),text=input.value.trim();if(!text)return;const model=document.getElementById("chatModel").value;addMsg("user",text);input.value="";messages.push({role:"user",content:text});const s=document.getElementById("chatStatus");s.textContent="Generating...";try{const data=await api("chat",{model,messages});const answer=data.choices?.[0]?.message?.content||"No response.";addMsg("assistant",answer);messages.push({role:"assistant",content:answer});s.textContent="Done."}catch(e){addMsg("assistant","Error: "+e.message);s.textContent="Failed."}}
+function addMsg(role,text){const d=document.createElement("div");d.className="msg "+role;d.textContent=text;const box=document.getElementById("chatBox");box.appendChild(d);box.scrollTop=box.scrollHeight}
+function clearChat(){messages=[];document.getElementById("chatBox").innerHTML=""}
+async function generateImage(){const prompt=document.getElementById("imagePrompt").value.trim();if(!prompt)return;const s=document.getElementById("imageStatus"),out=document.getElementById("imageResult");s.textContent="Generating...";out.innerHTML="";try{const data=await api("image",{model:"grok-imagine-image",prompt,size:document.getElementById("imageSize").value,quality:document.getElementById("imageQuality").value});const item=data.data?.[0];if(item?.url)out.innerHTML=`<img src="${item.url}" alt="Generated image">`;else if(item?.b64_json)out.innerHTML=`<img src="data:image/png;base64,${item.b64_json}" alt="Generated image">`;else throw new Error("No image returned.");s.textContent="Done."}catch(e){s.innerHTML='<div class="error">'+esc(e.message)+'</div>'}}
+function previewEditImage(){const f=document.getElementById("editFile").files[0],img=document.getElementById("editPreview");if(!f)return;img.src=URL.createObjectURL(f);img.hidden=false}
+function fileToDataUrl(file){return new Promise((resolve,reject)=>{const r=new FileReader();r.onload=()=>resolve(r.result);r.onerror=reject;r.readAsDataURL(file)})}
+async function editImage(){const file=document.getElementById("editFile").files[0],prompt=document.getElementById("editPrompt").value.trim();if(!file||!prompt)return;const s=document.getElementById("editStatus"),out=document.getElementById("editResult");s.textContent="Editing...";out.innerHTML="";try{const image=await fileToDataUrl(file);const data=await api("edit",{model:"grok-imagine-image",prompt,image});const item=data.data?.[0];if(item?.url)out.innerHTML=`<img src="${item.url}" alt="Edited image">`;else if(item?.b64_json)out.innerHTML=`<img src="data:image/png;base64,${item.b64_json}" alt="Edited image">`;else throw new Error("No image returned.");s.textContent="Done."}catch(e){s.innerHTML='<div class="error">'+esc(e.message)+'</div>'}}
+function esc(v){const d=document.createElement("div");d.textContent=v??"";return d.innerHTML}
+loadModels();
+</script>
+</body>
+</html>
