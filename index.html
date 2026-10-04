@@ -270,7 +270,6 @@ button.danger:hover {
   font-size: 0.9rem;
 }
 
-/* Chat layout */
 .chat-layout {
   display: grid;
   grid-template-columns: 240px 1fr;
@@ -377,7 +376,6 @@ button.danger:hover {
   gap: 10px;
 }
 
-/* Image results */
 .image-result {
   margin-top: 16px;
 }
@@ -482,7 +480,6 @@ button.danger:hover {
     <button class="tab" data-tab="models">مدل‌ها</button>
   </div>
 
-  <!-- CHAT -->
   <section id="chat" class="panel active">
     <div class="chat-layout">
       <aside class="history">
@@ -534,7 +531,6 @@ button.danger:hover {
     </div>
   </section>
 
-  <!-- IMAGE GENERATION -->
   <section id="image" class="panel">
     <div class="field">
       <label for="imageModel">مدل تصویر</label>
@@ -544,7 +540,11 @@ button.danger:hover {
         <option value="grok-imagine-image-2.0">grok-imagine-image-2.0</option>
         <option value="grok-imagine-image-2-0">grok-imagine-image-2-0</option>
       </select>
-      <div class="hint">مدل‌های شناخته‌شده برای تولید تصویر از طریق ApiDuck</div>
+    </div>
+    <div class="field">
+      <label for="imageModelCustom">مدل دلخواه (اختیاری)</label>
+      <input type="text" id="imageModelCustom" placeholder="مثلاً dall-e-3 یا هر model id دیگر" dir="ltr">
+      <div class="hint">اگر پر شود، به‌جای لیست بالا استفاده می‌شود. هر model id که ApiDuck پشتیبانی کند را می‌توانی تست کنی.</div>
     </div>
 
     <div class="field">
@@ -579,7 +579,6 @@ button.danger:hover {
     <div id="imageResult" class="image-result"></div>
   </section>
 
-  <!-- IMAGE EDIT -->
   <section id="edit" class="panel">
     <div class="field">
       <label for="editModel">مدل ویرایش</label>
@@ -589,7 +588,11 @@ button.danger:hover {
         <option value="grok-imagine-image-2.0">grok-imagine-image-2.0</option>
         <option value="grok-imagine-image-2-0">grok-imagine-image-2-0</option>
       </select>
-      <div class="hint">همان مدل‌های تصویر برای ویرایش (image edits)</div>
+    </div>
+    <div class="field">
+      <label for="editModelCustom">مدل دلخواه (اختیاری)</label>
+      <input type="text" id="editModelCustom" placeholder="مثلاً dall-e-3 یا هر model id دیگر" dir="ltr">
+      <div class="hint">اگر پر شود، به‌جای لیست بالا استفاده می‌شود.</div>
     </div>
 
     <div class="field">
@@ -612,7 +615,6 @@ button.danger:hover {
     <div id="editResult" class="image-result"></div>
   </section>
 
-  <!-- MODELS -->
   <section id="models" class="panel">
     <div class="btn-row">
       <button type="button" class="action" onclick="loadModels()">بارگذاری مدل‌ها</button>
@@ -624,13 +626,8 @@ button.danger:hover {
 </div>
 
 <script>
-/*
- * Frontend → Netlify Function / Cloudflare Worker → ApiDuck
- * API key never lives in the browser.
- */
 const API = "https://myhamed.netlify.app/.netlify/functions/ai";
 
-/* Known image-capable models (not always returned by /models) */
 const IMAGE_MODELS = [
   { id: "grok-imagine-image", label: "grok-imagine-image (استاندارد)" },
   { id: "grok-imagine-image-quality", label: "grok-imagine-image-quality (کیفیت بالا)" },
@@ -645,7 +642,6 @@ let messages = [];
 
 const STORAGE_KEY = "ai_studio_chats_v1";
 
-/* Tabs */
 document.querySelectorAll(".tab").forEach(button => {
   button.addEventListener("click", () => {
     document.querySelectorAll(".tab").forEach(item => item.classList.remove("active"));
@@ -655,7 +651,6 @@ document.querySelectorAll(".tab").forEach(button => {
   });
 });
 
-/* API helper (JSON) */
 async function api(action, payload = {}) {
   const response = await fetch(API, {
     method: "POST",
@@ -931,7 +926,8 @@ async function generateImage() {
   const status = document.getElementById("imageStatus");
   const output = document.getElementById("imageResult");
   const btn = document.getElementById("genBtn");
-  const model = document.getElementById("imageModel").value;
+  const custom = document.getElementById("imageModelCustom").value.trim();
+  const model = custom || document.getElementById("imageModel").value;
 
   status.textContent = "در حال تولید تصویر...";
   status.classList.add("loading");
@@ -981,7 +977,8 @@ async function editImage() {
   const status = document.getElementById("editStatus");
   const output = document.getElementById("editResult");
   const btn = document.getElementById("editBtn");
-  const model = document.getElementById("editModel").value;
+  const custom = document.getElementById("editModelCustom").value.trim();
+  const model = custom || document.getElementById("editModel").value;
 
   status.textContent = "در حال ویرایش...";
   status.classList.add("loading");
@@ -1078,7 +1075,6 @@ function esc(value) {
   return div.innerHTML;
 }
 
-/* Enter to send in chat */
 document.getElementById("chatInput").addEventListener("keydown", e => {
   if (e.key === "Enter" && !e.shiftKey) {
     e.preventDefault();
@@ -1086,7 +1082,6 @@ document.getElementById("chatInput").addEventListener("keydown", e => {
   }
 });
 
-/* Startup */
 populateImageModelSelects([]);
 loadChats();
 loadModels();
