@@ -64,7 +64,7 @@ button.action{border:0;background:#111;color:#fff;border-radius:9px;padding:11px
 </main></div>
 
 <script>
-const API="/api/ai";
+const API = "https://aistudio.h-khanepaz.workers.dev";
 let allModels=[],messages=[];
 document.querySelectorAll(".tab").forEach(b=>b.onclick=()=>{document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));document.querySelectorAll(".panel").forEach(x=>x.classList.remove("active"));b.classList.add("active");document.getElementById(b.dataset.tab).classList.add("active")});
 async function api(action,payload={}){const r=await fetch(API,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({action,...payload})});const data=await r.json();if(!r.ok)throw new Error(data.error||JSON.stringify(data));return data}
