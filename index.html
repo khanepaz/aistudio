@@ -27,16 +27,8 @@
   --font: "Segoe UI", system-ui, -apple-system, sans-serif;
 }
 
-* {
-  box-sizing: border-box;
-}
-
-html, body {
-  margin: 0;
-  padding: 0;
-  min-height: 100%;
-}
-
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; min-height: 100%; }
 body {
   font-family: var(--font);
   background: radial-gradient(1200px 600px at 10% -10%, #1a2433 0%, transparent 50%),
@@ -45,422 +37,159 @@ body {
   color: var(--text);
   line-height: 1.55;
 }
-
 header {
-  position: sticky;
-  top: 0;
-  z-index: 20;
+  position: sticky; top: 0; z-index: 20;
   backdrop-filter: blur(12px);
   background: rgba(15, 17, 21, 0.85);
   border-bottom: 1px solid var(--border-soft);
   padding: 16px 24px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
+  display: flex; align-items: center; justify-content: space-between; gap: 16px;
 }
-
 header h1 {
-  margin: 0;
-  font-size: 1.25rem;
-  font-weight: 700;
-  letter-spacing: -0.02em;
+  margin: 0; font-size: 1.25rem; font-weight: 700; letter-spacing: -0.02em;
   background: linear-gradient(135deg, var(--accent), var(--accent-2));
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
+  -webkit-background-clip: text; background-clip: text; color: transparent;
 }
-
 header .badge {
-  font-size: 0.75rem;
-  color: var(--text-muted);
-  background: var(--bg-soft);
-  border: 1px solid var(--border);
-  padding: 4px 10px;
-  border-radius: 999px;
+  font-size: 0.75rem; color: var(--text-muted); background: var(--bg-soft);
+  border: 1px solid var(--border); padding: 4px 10px; border-radius: 999px;
 }
-
-.container {
-  max-width: 1120px;
-  margin: 0 auto;
-  padding: 20px 16px 48px;
-}
-
+.container { max-width: 1120px; margin: 0 auto; padding: 20px 16px 48px; }
 .tabs {
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-  margin-bottom: 18px;
-  padding: 6px;
-  background: var(--bg-elevated);
-  border: 1px solid var(--border-soft);
-  border-radius: 16px;
+  display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 18px; padding: 6px;
+  background: var(--bg-elevated); border: 1px solid var(--border-soft); border-radius: 16px;
 }
-
 .tab {
-  border: 0;
-  background: transparent;
-  color: var(--text-muted);
-  padding: 10px 16px;
-  border-radius: 12px;
-  cursor: pointer;
-  font-size: 0.95rem;
-  font-weight: 600;
-  transition: background 0.15s, color 0.15s;
+  border: 0; background: transparent; color: var(--text-muted);
+  padding: 10px 16px; border-radius: 12px; cursor: pointer;
+  font-size: 0.95rem; font-weight: 600; transition: background 0.15s, color 0.15s;
 }
-
-.tab:hover {
-  color: var(--text);
-  background: var(--bg-soft);
-}
-
-.tab.active {
-  background: var(--accent-soft);
-  color: var(--accent);
-}
-
+.tab:hover { color: var(--text); background: var(--bg-soft); }
+.tab.active { background: var(--accent-soft); color: var(--accent); }
 .panel {
-  display: none;
-  background: var(--bg-elevated);
-  border: 1px solid var(--border-soft);
-  border-radius: var(--radius);
-  box-shadow: var(--shadow);
-  padding: 22px;
+  display: none; background: var(--bg-elevated); border: 1px solid var(--border-soft);
+  border-radius: var(--radius); box-shadow: var(--shadow); padding: 22px;
   animation: fadeIn 0.2s ease;
 }
-
-.panel.active {
-  display: block;
-}
-
+.panel.active { display: block; }
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(4px); }
   to { opacity: 1; transform: none; }
 }
-
-.grid-2 {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 14px;
-}
-
-.field {
-  margin-bottom: 14px;
-}
-
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.field { margin-bottom: 14px; }
 label {
-  display: block;
-  margin-bottom: 7px;
-  font-size: 0.85rem;
-  font-weight: 600;
-  color: var(--text-muted);
+  display: block; margin-bottom: 7px; font-size: 0.85rem;
+  font-weight: 600; color: var(--text-muted);
 }
-
-select,
-textarea,
-input[type="file"],
-input[type="text"] {
-  width: 100%;
-  padding: 11px 13px;
-  border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
-  background: var(--bg-soft);
-  color: var(--text);
-  font-size: 0.95rem;
-  font-family: inherit;
-  outline: none;
+select, textarea, input[type="file"], input[type="text"] {
+  width: 100%; padding: 11px 13px; border: 1px solid var(--border);
+  border-radius: var(--radius-sm); background: var(--bg-soft); color: var(--text);
+  font-size: 0.95rem; font-family: inherit; outline: none;
   transition: border-color 0.15s, box-shadow 0.15s;
 }
-
-select:focus,
-textarea:focus,
-input[type="text"]:focus {
-  border-color: var(--accent);
-  box-shadow: 0 0 0 3px var(--accent-soft);
+select:focus, textarea:focus, input[type="text"]:focus {
+  border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft);
 }
-
-textarea {
-  min-height: 120px;
-  resize: vertical;
-}
-
-input[type="file"] {
-  padding: 10px;
-  cursor: pointer;
-}
-
-.btn-row {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin-top: 6px;
-}
-
-button.action,
-button.secondary,
-button.danger,
-.history-header button {
-  border: 0;
-  border-radius: var(--radius-sm);
-  padding: 11px 18px;
-  font-size: 0.92rem;
-  font-weight: 600;
-  cursor: pointer;
+textarea { min-height: 120px; resize: vertical; }
+input[type="file"] { padding: 10px; cursor: pointer; }
+.btn-row { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 6px; }
+button.action, button.secondary, button.danger, .history-header button {
+  border: 0; border-radius: var(--radius-sm); padding: 11px 18px;
+  font-size: 0.92rem; font-weight: 600; cursor: pointer;
   transition: opacity 0.15s, transform 0.1s;
 }
-
 button.action {
-  background: linear-gradient(135deg, #34d399, #22d3ee);
-  color: #0b1220;
+  background: linear-gradient(135deg, #34d399, #22d3ee); color: #0b1220;
 }
-
-button.action:hover {
-  opacity: 0.9;
-}
-
-button.action:active {
-  transform: scale(0.98);
-}
-
-button.action:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-  transform: none;
-}
-
+button.action:hover { opacity: 0.9; }
+button.action:active { transform: scale(0.98); }
+button.action:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
 button.secondary {
-  background: var(--bg-soft);
-  color: var(--text);
-  border: 1px solid var(--border);
+  background: var(--bg-soft); color: var(--text); border: 1px solid var(--border);
 }
-
-button.secondary:hover {
-  border-color: var(--text-dim);
-}
-
+button.secondary:hover { border-color: var(--text-dim); }
 button.danger {
-  background: var(--danger-soft);
-  color: var(--danger);
-  border: 1px solid transparent;
+  background: var(--danger-soft); color: var(--danger); border: 1px solid transparent;
 }
-
-button.danger:hover {
-  border-color: var(--danger);
-}
-
+button.danger:hover { border-color: var(--danger); }
 .status {
-  margin-top: 12px;
-  font-size: 0.9rem;
-  color: var(--text-muted);
-  min-height: 1.4em;
+  margin-top: 12px; font-size: 0.9rem; color: var(--text-muted); min-height: 1.4em;
 }
-
-.status.loading {
-  color: var(--accent-2);
-}
-
+.status.loading { color: var(--accent-2); }
 .error {
-  color: var(--danger);
-  background: var(--danger-soft);
-  border: 1px solid rgba(248, 113, 113, 0.25);
-  padding: 10px 12px;
-  border-radius: var(--radius-sm);
-  margin-top: 10px;
-  white-space: pre-wrap;
-  font-size: 0.9rem;
+  color: var(--danger); background: var(--danger-soft);
+  border: 1px solid rgba(248, 113, 113, 0.25); padding: 10px 12px;
+  border-radius: var(--radius-sm); margin-top: 10px; white-space: pre-wrap; font-size: 0.9rem;
 }
-
-.chat-layout {
-  display: grid;
-  grid-template-columns: 240px 1fr;
-  gap: 16px;
-}
-
+.chat-layout { display: grid; grid-template-columns: 240px 1fr; gap: 16px; }
 .history {
-  border: 1px solid var(--border-soft);
-  border-radius: var(--radius-sm);
-  padding: 10px;
-  background: var(--bg);
-  max-height: 640px;
-  overflow-y: auto;
+  border: 1px solid var(--border-soft); border-radius: var(--radius-sm);
+  padding: 10px; background: var(--bg); max-height: 640px; overflow-y: auto;
 }
-
-.history-header {
-  display: flex;
-  gap: 6px;
-  margin-bottom: 10px;
-}
-
+.history-header { display: flex; gap: 6px; margin-bottom: 10px; }
 .history-header button {
-  flex: 1;
-  padding: 8px;
-  background: var(--bg-soft);
-  color: var(--text);
-  border: 1px solid var(--border);
-  font-size: 0.85rem;
+  flex: 1; padding: 8px; background: var(--bg-soft); color: var(--text);
+  border: 1px solid var(--border); font-size: 0.85rem;
 }
-
 .history-item {
-  padding: 10px 12px;
-  border-radius: 10px;
-  margin-bottom: 6px;
-  cursor: pointer;
-  background: var(--bg-elevated);
-  border: 1px solid transparent;
+  padding: 10px 12px; border-radius: 10px; margin-bottom: 6px; cursor: pointer;
+  background: var(--bg-elevated); border: 1px solid transparent;
   transition: border-color 0.15s, background 0.15s;
 }
-
-.history-item:hover {
-  border-color: var(--border);
-}
-
+.history-item:hover { border-color: var(--border); }
 .history-item.active {
-  background: var(--accent-soft);
-  border-color: rgba(110, 231, 183, 0.35);
+  background: var(--accent-soft); border-color: rgba(110, 231, 183, 0.35);
 }
-
 .history-item-title {
-  font-weight: 600;
-  font-size: 0.9rem;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  font-weight: 600; font-size: 0.9rem; overflow: hidden;
+  text-overflow: ellipsis; white-space: nowrap;
 }
-
-.history-item-meta {
-  font-size: 0.75rem;
-  margin-top: 4px;
-  color: var(--text-dim);
-}
-
-.chat-main {
-  min-width: 0;
-}
-
+.history-item-meta { font-size: 0.75rem; margin-top: 4px; color: var(--text-dim); }
+.chat-main { min-width: 0; }
 .chat-box {
-  height: 420px;
-  overflow-y: auto;
-  border: 1px solid var(--border-soft);
-  border-radius: var(--radius-sm);
-  padding: 14px;
-  margin: 12px 0;
-  background: var(--bg);
+  height: 420px; overflow-y: auto; border: 1px solid var(--border-soft);
+  border-radius: var(--radius-sm); padding: 14px; margin: 12px 0; background: var(--bg);
 }
-
 .msg {
-  padding: 11px 14px;
-  border-radius: 12px;
-  margin-bottom: 10px;
-  white-space: pre-wrap;
-  line-height: 1.55;
-  max-width: 92%;
-  font-size: 0.95rem;
+  padding: 11px 14px; border-radius: 12px; margin-bottom: 10px;
+  white-space: pre-wrap; line-height: 1.55; max-width: 92%; font-size: 0.95rem;
 }
-
 .msg.user {
-  background: var(--user-bg);
-  margin-right: auto;
-  border-bottom-right-radius: 4px;
+  background: var(--user-bg); margin-right: auto; border-bottom-right-radius: 4px;
 }
-
 .msg.assistant {
-  background: var(--assistant-bg);
-  margin-left: auto;
-  border: 1px solid rgba(96, 165, 250, 0.15);
-  border-bottom-left-radius: 4px;
+  background: var(--assistant-bg); margin-left: auto;
+  border: 1px solid rgba(96, 165, 250, 0.15); border-bottom-left-radius: 4px;
 }
-
-.chat-controls {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
+.chat-controls { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.image-result { margin-top: 16px; }
+.image-result img, .preview {
+  max-width: 100%; max-height: 480px; border-radius: 12px;
+  border: 1px solid var(--border-soft); background: var(--bg); display: block;
 }
-
-.image-result {
-  margin-top: 16px;
-}
-
-.image-result img,
-.preview {
-  max-width: 100%;
-  max-height: 480px;
-  border-radius: 12px;
-  border: 1px solid var(--border-soft);
-  background: var(--bg);
-  display: block;
-}
-
-.preview {
-  margin-top: 12px;
-}
-
+.preview { margin-top: 12px; }
 .model-card {
-  border: 1px solid var(--border-soft);
-  padding: 14px;
-  margin-bottom: 8px;
-  border-radius: var(--radius-sm);
-  background: var(--bg);
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px 16px;
-  align-items: center;
+  border: 1px solid var(--border-soft); padding: 14px; margin-bottom: 8px;
+  border-radius: var(--radius-sm); background: var(--bg);
+  display: flex; flex-wrap: wrap; gap: 8px 16px; align-items: center;
 }
-
-.model-card b {
-  font-size: 0.95rem;
-}
-
-.model-card .meta {
-  color: var(--text-muted);
-  font-size: 0.85rem;
-}
-
-.model-card .tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  margin-right: auto;
-}
-
+.model-card b { font-size: 0.95rem; }
+.model-card .meta { color: var(--text-muted); font-size: 0.85rem; }
+.model-card .tags { display: flex; flex-wrap: wrap; gap: 6px; margin-right: auto; }
 .tag {
-  font-size: 0.72rem;
-  padding: 3px 8px;
-  border-radius: 999px;
-  background: var(--bg-soft);
-  color: var(--text-muted);
-  border: 1px solid var(--border);
+  font-size: 0.72rem; padding: 3px 8px; border-radius: 999px;
+  background: var(--bg-soft); color: var(--text-muted); border: 1px solid var(--border);
 }
-
 .empty-history {
-  color: var(--text-dim);
-  text-align: center;
-  padding: 24px 8px;
-  font-size: 0.9rem;
+  color: var(--text-dim); text-align: center; padding: 24px 8px; font-size: 0.9rem;
 }
-
-.hint {
-  font-size: 0.8rem;
-  color: var(--text-dim);
-  margin-top: 6px;
-}
-
+.hint { font-size: 0.8rem; color: var(--text-dim); margin-top: 6px; }
 @media (max-width: 800px) {
-  .chat-layout {
-    grid-template-columns: 1fr;
-  }
-
-  .history {
-    max-height: 200px;
-  }
-
-  .chat-controls,
-  .grid-2 {
-    grid-template-columns: 1fr;
-  }
-
-  header {
-    padding: 14px 16px;
-  }
+  .chat-layout { grid-template-columns: 1fr; }
+  .history { max-height: 200px; }
+  .chat-controls, .grid-2 { grid-template-columns: 1fr; }
+  header { padding: 14px 16px; }
 }
 </style>
 </head>
@@ -489,7 +218,6 @@ button.danger:hover {
         </div>
         <div id="historyList"></div>
       </aside>
-
       <main class="chat-main">
         <div class="grid-2">
           <div class="field">
@@ -514,18 +242,14 @@ button.danger:hover {
             </select>
           </div>
         </div>
-
         <div id="chatBox" class="chat-box"></div>
-
         <div class="field">
           <textarea id="chatInput" placeholder="پیام خود را بنویسید..." rows="3"></textarea>
         </div>
-
         <div class="chat-controls">
           <button type="button" class="action" id="sendBtn" onclick="sendMessage()">ارسال</button>
           <button type="button" class="secondary" onclick="clearCurrentChat()">پاک کردن گفتگو</button>
         </div>
-
         <div id="chatStatus" class="status"></div>
       </main>
     </div>
@@ -535,23 +259,19 @@ button.danger:hover {
     <div class="field">
       <label for="imageModel">مدل تصویر</label>
       <select id="imageModel">
-        <option value="grok-imagine-image">grok-imagine-image (استاندارد)</option>
-        <option value="grok-imagine-image-quality">grok-imagine-image-quality (کیفیت بالا)</option>
-        <option value="grok-imagine-image-2.0">grok-imagine-image-2.0</option>
-        <option value="grok-imagine-image-2-0">grok-imagine-image-2-0</option>
+        <option value="grok-imagine-image">Grok Imagine (grok-imagine-image)</option>
+        <option value="nano-banana-2">Nano Banana 2 (nano-banana-2)</option>
       </select>
     </div>
     <div class="field">
       <label for="imageModelCustom">مدل دلخواه (اختیاری)</label>
-      <input type="text" id="imageModelCustom" placeholder="مثلاً dall-e-3 یا هر model id دیگر" dir="ltr">
-      <div class="hint">اگر پر شود، به‌جای لیست بالا استفاده می‌شود. هر model id که ApiDuck پشتیبانی کند را می‌توانی تست کنی.</div>
+      <input type="text" id="imageModelCustom" placeholder="model id دیگر (اختیاری)" dir="ltr">
+      <div class="hint">مدل‌های تأییدشده: Grok Imagine و Nano Banana 2. فیلد دلخواه فقط برای تست مدل جدید.</div>
     </div>
-
     <div class="field">
       <label for="imagePrompt">پرامپت</label>
       <textarea id="imagePrompt" placeholder="تصویری که می‌خواهید تولید شود را توصیف کنید..."></textarea>
     </div>
-
     <div class="grid-2">
       <div class="field">
         <label for="imageSize">اندازه</label>
@@ -559,22 +279,22 @@ button.danger:hover {
           <option value="1024x1024">1024×1024</option>
           <option value="1792x1024">1792×1024</option>
           <option value="1024x1792">1024×1792</option>
+          <option value="1536x1024">1536×1024</option>
         </select>
       </div>
       <div class="field">
         <label for="imageQuality">کیفیت</label>
         <select id="imageQuality">
+          <option value="low">low</option>
+          <option value="medium">medium</option>
           <option value="standard">standard</option>
           <option value="hd">hd</option>
-          <option value="low">low</option>
         </select>
       </div>
     </div>
-
     <div class="btn-row">
       <button type="button" class="action" id="genBtn" onclick="generateImage()">تولید تصویر</button>
     </div>
-
     <div id="imageStatus" class="status"></div>
     <div id="imageResult" class="image-result"></div>
   </section>
@@ -583,34 +303,27 @@ button.danger:hover {
     <div class="field">
       <label for="editModel">مدل ویرایش</label>
       <select id="editModel">
-        <option value="grok-imagine-image">grok-imagine-image (استاندارد)</option>
-        <option value="grok-imagine-image-quality">grok-imagine-image-quality (کیفیت بالا)</option>
-        <option value="grok-imagine-image-2.0">grok-imagine-image-2.0</option>
-        <option value="grok-imagine-image-2-0">grok-imagine-image-2-0</option>
+        <option value="grok-imagine-image">Grok Imagine (grok-imagine-image)</option>
+        <option value="nano-banana-2">Nano Banana 2 (nano-banana-2)</option>
       </select>
     </div>
     <div class="field">
       <label for="editModelCustom">مدل دلخواه (اختیاری)</label>
-      <input type="text" id="editModelCustom" placeholder="مثلاً dall-e-3 یا هر model id دیگر" dir="ltr">
+      <input type="text" id="editModelCustom" placeholder="model id دیگر (اختیاری)" dir="ltr">
       <div class="hint">اگر پر شود، به‌جای لیست بالا استفاده می‌شود.</div>
     </div>
-
     <div class="field">
       <label for="editFile">تصویر</label>
       <input id="editFile" type="file" accept="image/*" onchange="previewEditImage()">
     </div>
-
     <img id="editPreview" class="preview" hidden alt="پیش‌نمایش">
-
     <div class="field">
       <label for="editPrompt">پرامپت ویرایش</label>
       <textarea id="editPrompt" placeholder="تغییر مورد نظر را توصیف کنید..."></textarea>
     </div>
-
     <div class="btn-row">
       <button type="button" class="action" id="editBtn" onclick="editImage()">ویرایش تصویر</button>
     </div>
-
     <div id="editStatus" class="status"></div>
     <div id="editResult" class="image-result"></div>
   </section>
@@ -628,18 +341,16 @@ button.danger:hover {
 <script>
 const API = "https://myhamed.netlify.app/.netlify/functions/ai";
 
+/* Confirmed image models from ApiDuck docs (generations + edits) */
 const IMAGE_MODELS = [
-  { id: "grok-imagine-image", label: "grok-imagine-image (استاندارد)" },
-  { id: "grok-imagine-image-quality", label: "grok-imagine-image-quality (کیفیت بالا)" },
-  { id: "grok-imagine-image-2.0", label: "grok-imagine-image-2.0" },
-  { id: "grok-imagine-image-2-0", label: "grok-imagine-image-2-0" }
+  { id: "grok-imagine-image", label: "Grok Imagine (grok-imagine-image)" },
+  { id: "nano-banana-2", label: "Nano Banana 2 (nano-banana-2)" }
 ];
 
 let allModels = [];
 let chats = [];
 let currentChatId = null;
 let messages = [];
-
 const STORAGE_KEY = "ai_studio_chats_v1";
 
 document.querySelectorAll(".tab").forEach(button => {
@@ -657,30 +368,19 @@ async function api(action, payload = {}) {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ action, payload })
   });
-
   const text = await response.text();
   let data;
-
-  try {
-    data = JSON.parse(text);
-  } catch {
-    throw new Error(text || `HTTP ${response.status}`);
-  }
-
+  try { data = JSON.parse(text); }
+  catch { throw new Error(text || `HTTP ${response.status}`); }
   if (!response.ok) {
     const error = data.error;
     if (typeof error === "string") throw new Error(error);
     if (error?.message) throw new Error(error.message);
     if (data.message) {
-      throw new Error(
-        typeof data.message === "string"
-          ? data.message
-          : JSON.stringify(data.message, null, 2)
-      );
+      throw new Error(typeof data.message === "string" ? data.message : JSON.stringify(data.message, null, 2));
     }
     throw new Error(JSON.stringify(data, null, 2));
   }
-
   return data;
 }
 
@@ -692,11 +392,8 @@ function loadChats() {
   try {
     const saved = localStorage.getItem(STORAGE_KEY);
     chats = saved ? JSON.parse(saved) : [];
-  } catch {
-    chats = [];
-  }
+  } catch { chats = []; }
   if (!Array.isArray(chats)) chats = [];
-
   renderHistory();
   if (chats.length > 0) openChat(chats[0].id);
   else newChat();
@@ -715,7 +412,6 @@ function newChat() {
     createdAt: Date.now(),
     updatedAt: Date.now()
   };
-
   chats.unshift(chat);
   currentChatId = chat.id;
   messages = chat.messages;
@@ -728,13 +424,10 @@ function newChat() {
 function openChat(id) {
   const chat = chats.find(item => item.id === id);
   if (!chat) return;
-
   currentChatId = chat.id;
   messages = Array.isArray(chat.messages) ? chat.messages : [];
-
   const model = document.getElementById("chatModel");
   if (model && chat.model) model.value = chat.model;
-
   renderHistory();
   renderMessages();
 }
@@ -742,16 +435,13 @@ function openChat(id) {
 function saveCurrentChat() {
   const chat = chats.find(item => item.id === currentChatId);
   if (!chat) return;
-
   chat.messages = messages;
   chat.model = document.getElementById("chatModel").value;
   chat.updatedAt = Date.now();
-
   const firstUserMessage = messages.find(item => item.role === "user");
   if (firstUserMessage && (chat.title === "گفتگوی جدید" || chat.title === "New Chat")) {
     chat.title = firstUserMessage.content.replace(/\s+/g, " ").trim().substring(0, 40);
   }
-
   chats.sort((a, b) => b.updatedAt - a.updatedAt);
   saveChats();
   renderHistory();
@@ -759,20 +449,16 @@ function saveCurrentChat() {
 
 function renderHistory() {
   const list = document.getElementById("historyList");
-
   if (!chats.length) {
     list.innerHTML = '<div class="empty-history">هنوز گفتگویی نیست.</div>';
     return;
   }
-
   list.innerHTML = chats.map(chat => {
     const active = chat.id === currentChatId ? "active" : "";
-    return `
-      <div class="history-item ${active}" onclick="openChat('${chat.id}')">
-        <div class="history-item-title">${esc(chat.title)}</div>
-        <div class="history-item-meta">${chat.messages.length} پیام</div>
-      </div>
-    `;
+    return `<div class="history-item ${active}" onclick="openChat('${chat.id}')">
+      <div class="history-item-title">${esc(chat.title)}</div>
+      <div class="history-item-meta">${chat.messages.length} پیام</div>
+    </div>`;
   }).join("");
 }
 
@@ -785,12 +471,8 @@ function renderMessages() {
 function deleteAllChats() {
   if (!chats.length) return;
   if (!confirm("همه تاریخچه گفتگو پاک شود؟")) return;
-
-  chats = [];
-  currentChatId = null;
-  messages = [];
-  saveChats();
-  newChat();
+  chats = []; currentChatId = null; messages = [];
+  saveChats(); newChat();
 }
 
 function clearCurrentChat() {
@@ -801,40 +483,24 @@ function clearCurrentChat() {
     chat.title = "گفتگوی جدید";
     chat.updatedAt = Date.now();
   }
-  saveChats();
-  renderHistory();
-  renderMessages();
+  saveChats(); renderHistory(); renderMessages();
 }
 
 document.getElementById("provider").addEventListener("change", refreshModels);
 
 function refreshModels() {
   const provider = document.getElementById("provider").value;
-  const list = allModels.filter(model =>
-    provider === "all" || model.company === provider
-  );
-
+  const list = allModels.filter(model => provider === "all" || model.company === provider);
   const select = document.getElementById("chatModel");
   const current = select.value;
-
   select.innerHTML = list.map(model =>
     `<option value="${esc(model.id)}">${esc(model.id)}</option>`
   ).join("");
-
-  if ([...select.options].some(option => option.value === current)) {
-    select.value = current;
-  }
-
-  if (!list.length) {
-    select.innerHTML = '<option value="gpt-6-astra">gpt-6-astra</option>';
-  }
-
+  if ([...select.options].some(option => option.value === current)) select.value = current;
+  if (!list.length) select.innerHTML = '<option value="gpt-6-astra">gpt-6-astra</option>';
   if (currentChatId) {
     const chat = chats.find(item => item.id === currentChatId);
-    if (chat) {
-      chat.model = select.value;
-      saveChats();
-    }
+    if (chat) { chat.model = select.value; saveChats(); }
   }
 }
 
@@ -843,33 +509,23 @@ function populateImageModelSelects(fromApi) {
   if (Array.isArray(fromApi)) {
     fromApi.forEach(m => {
       const id = (m.id || "").toLowerCase();
-      if (
-        id.includes("imagine") ||
-        id.includes("image") ||
-        id.includes("dall") ||
-        id.includes("flux") ||
-        id.includes("diffusion") ||
-        id.includes("imagen")
-      ) {
+      if (id.includes("imagine") || id.includes("image") || id.includes("banana") ||
+          id.includes("dall") || id.includes("flux") || id.includes("diffusion") || id.includes("imagen")) {
         ids.add(m.id);
       }
     });
   }
-
   const options = [...ids].map(id => {
     const known = IMAGE_MODELS.find(m => m.id === id);
     const label = known ? known.label : id;
     return `<option value="${esc(id)}">${esc(label)}</option>`;
   }).join("");
-
   const imageSelect = document.getElementById("imageModel");
   const editSelect = document.getElementById("editModel");
   const prevImage = imageSelect.value;
   const prevEdit = editSelect.value;
-
   imageSelect.innerHTML = options;
   editSelect.innerHTML = options;
-
   if ([...imageSelect.options].some(o => o.value === prevImage)) imageSelect.value = prevImage;
   if ([...editSelect.options].some(o => o.value === prevEdit)) editSelect.value = prevEdit;
 }
@@ -878,22 +534,17 @@ async function sendMessage() {
   const input = document.getElementById("chatInput");
   const text = input.value.trim();
   if (!text) return;
-
   if (!currentChatId) newChat();
-
   const model = document.getElementById("chatModel").value;
   const btn = document.getElementById("sendBtn");
-
   addMsg("user", text);
   input.value = "";
   messages.push({ role: "user", content: text });
   saveCurrentChat();
-
   const status = document.getElementById("chatStatus");
   status.textContent = "در حال تولید پاسخ...";
   status.classList.add("loading");
   btn.disabled = true;
-
   try {
     const data = await api("chat", { model, messages });
     const answer = data.choices?.[0]?.message?.content || "پاسخی دریافت نشد.";
@@ -922,18 +573,15 @@ function addMsg(role, text) {
 async function generateImage() {
   const prompt = document.getElementById("imagePrompt").value.trim();
   if (!prompt) return;
-
   const status = document.getElementById("imageStatus");
   const output = document.getElementById("imageResult");
   const btn = document.getElementById("genBtn");
   const custom = document.getElementById("imageModelCustom").value.trim();
   const model = custom || document.getElementById("imageModel").value;
-
   status.textContent = "در حال تولید تصویر...";
   status.classList.add("loading");
   output.innerHTML = "";
   btn.disabled = true;
-
   try {
     const data = await api("image", {
       model,
@@ -941,9 +589,7 @@ async function generateImage() {
       size: document.getElementById("imageSize").value,
       quality: document.getElementById("imageQuality").value
     });
-
     const item = data.data?.[0];
-
     if (item?.url) {
       output.innerHTML = `<img src="${item.url}" alt="Generated image">`;
     } else if (item?.b64_json) {
@@ -951,7 +597,6 @@ async function generateImage() {
     } else {
       throw new Error("تصویری برگردانده نشد.");
     }
-
     status.textContent = "انجام شد.";
   } catch (error) {
     status.innerHTML = `<div class="error">${esc(error.message)}</div>`;
@@ -973,47 +618,32 @@ async function editImage() {
   const file = document.getElementById("editFile").files[0];
   const prompt = document.getElementById("editPrompt").value.trim();
   if (!file || !prompt) return;
-
   const status = document.getElementById("editStatus");
   const output = document.getElementById("editResult");
   const btn = document.getElementById("editBtn");
   const custom = document.getElementById("editModelCustom").value.trim();
   const model = custom || document.getElementById("editModel").value;
-
   status.textContent = "در حال ویرایش...";
   status.classList.add("loading");
   output.innerHTML = "";
   btn.disabled = true;
-
   try {
     const formData = new FormData();
     formData.append("image", file, file.name);
     formData.append("prompt", prompt);
     formData.append("model", model);
-
-    const response = await fetch(API, {
-      method: "POST",
-      body: formData
-    });
-
+    const response = await fetch(API, { method: "POST", body: formData });
     const text = await response.text();
     let data;
-
-    try {
-      data = JSON.parse(text);
-    } catch {
-      throw new Error(text || `HTTP ${response.status}`);
-    }
-
+    try { data = JSON.parse(text); }
+    catch { throw new Error(text || `HTTP ${response.status}`); }
     if (!response.ok) {
       const error = data.error;
       if (typeof error === "string") throw new Error(error);
       if (error?.message) throw new Error(error.message);
       throw new Error(JSON.stringify(data, null, 2));
     }
-
     const item = data.data?.[0];
-
     if (item?.url) {
       output.innerHTML = `<img src="${item.url}" alt="Edited image">`;
     } else if (item?.b64_json) {
@@ -1021,7 +651,6 @@ async function editImage() {
     } else {
       throw new Error("تصویر ویرایش‌شده برگردانده نشد.");
     }
-
     status.textContent = "انجام شد.";
   } catch (error) {
     status.innerHTML = `<div class="error">${esc(error.message)}</div>`;
@@ -1033,34 +662,24 @@ async function editImage() {
 
 async function loadModels() {
   const status = document.getElementById("modelStatus");
-
   try {
     status.textContent = "در حال بارگذاری...";
     status.classList.add("loading");
-
     const data = await api("models");
     allModels = data.data || [];
-
     refreshModels();
     populateImageModelSelects(allModels);
-
     document.getElementById("modelList").innerHTML = allModels.map(model => {
       const capabilities = [];
       if (model.supports_vision) capabilities.push("vision");
       if (model.supports_reasoning) capabilities.push("reasoning");
       if (model.supports_tools) capabilities.push("tools");
-
-      return `
-        <div class="model-card">
-          <b>${esc(model.id)}</b>
-          <span class="meta">${esc(model.company || model.owned_by || "")}</span>
-          <div class="tags">
-            ${capabilities.map(c => `<span class="tag">${esc(c)}</span>`).join("")}
-          </div>
-        </div>
-      `;
+      return `<div class="model-card">
+        <b>${esc(model.id)}</b>
+        <span class="meta">${esc(model.company || model.owned_by || "")}</span>
+        <div class="tags">${capabilities.map(c => `<span class="tag">${esc(c)}</span>`).join("")}</div>
+      </div>`;
     }).join("");
-
     status.textContent = `${allModels.length} مدل بارگذاری شد.`;
   } catch (error) {
     status.textContent = "خطا: " + error.message;
