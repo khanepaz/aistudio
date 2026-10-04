@@ -26,7 +26,6 @@
   --shadow: 0 8px 30px rgba(0, 0, 0, 0.35);
   --font: "Segoe UI", system-ui, -apple-system, sans-serif;
 }
-
 * { box-sizing: border-box; }
 html, body { margin: 0; padding: 0; min-height: 100%; }
 body {
@@ -34,16 +33,12 @@ body {
   background: radial-gradient(1200px 600px at 10% -10%, #1a2433 0%, transparent 50%),
               radial-gradient(900px 500px at 100% 0%, #1a2a22 0%, transparent 45%),
               var(--bg);
-  color: var(--text);
-  line-height: 1.55;
+  color: var(--text); line-height: 1.55;
 }
 header {
-  position: sticky; top: 0; z-index: 20;
-  backdrop-filter: blur(12px);
-  background: rgba(15, 17, 21, 0.85);
-  border-bottom: 1px solid var(--border-soft);
-  padding: 16px 24px;
-  display: flex; align-items: center; justify-content: space-between; gap: 16px;
+  position: sticky; top: 0; z-index: 20; backdrop-filter: blur(12px);
+  background: rgba(15, 17, 21, 0.85); border-bottom: 1px solid var(--border-soft);
+  padding: 16px 24px; display: flex; align-items: center; justify-content: space-between; gap: 16px;
 }
 header h1 {
   margin: 0; font-size: 1.25rem; font-weight: 700; letter-spacing: -0.02em;
@@ -60,33 +55,25 @@ header .badge {
   background: var(--bg-elevated); border: 1px solid var(--border-soft); border-radius: 16px;
 }
 .tab {
-  border: 0; background: transparent; color: var(--text-muted);
-  padding: 10px 16px; border-radius: 12px; cursor: pointer;
-  font-size: 0.95rem; font-weight: 600; transition: background 0.15s, color 0.15s;
+  border: 0; background: transparent; color: var(--text-muted); padding: 10px 16px;
+  border-radius: 12px; cursor: pointer; font-size: 0.95rem; font-weight: 600;
+  transition: background 0.15s, color 0.15s;
 }
 .tab:hover { color: var(--text); background: var(--bg-soft); }
 .tab.active { background: var(--accent-soft); color: var(--accent); }
 .panel {
   display: none; background: var(--bg-elevated); border: 1px solid var(--border-soft);
-  border-radius: var(--radius); box-shadow: var(--shadow); padding: 22px;
-  animation: fadeIn 0.2s ease;
+  border-radius: var(--radius); box-shadow: var(--shadow); padding: 22px; animation: fadeIn 0.2s ease;
 }
 .panel.active { display: block; }
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(4px); }
-  to { opacity: 1; transform: none; }
-}
+@keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
 .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
 .field { margin-bottom: 14px; }
-label {
-  display: block; margin-bottom: 7px; font-size: 0.85rem;
-  font-weight: 600; color: var(--text-muted);
-}
+label { display: block; margin-bottom: 7px; font-size: 0.85rem; font-weight: 600; color: var(--text-muted); }
 select, textarea, input[type="file"], input[type="text"] {
-  width: 100%; padding: 11px 13px; border: 1px solid var(--border);
-  border-radius: var(--radius-sm); background: var(--bg-soft); color: var(--text);
-  font-size: 0.95rem; font-family: inherit; outline: none;
-  transition: border-color 0.15s, box-shadow 0.15s;
+  width: 100%; padding: 11px 13px; border: 1px solid var(--border); border-radius: var(--radius-sm);
+  background: var(--bg-soft); color: var(--text); font-size: 0.95rem; font-family: inherit;
+  outline: none; transition: border-color 0.15s, box-shadow 0.15s;
 }
 select:focus, textarea:focus, input[type="text"]:focus {
   border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft);
@@ -95,37 +82,27 @@ textarea { min-height: 120px; resize: vertical; }
 input[type="file"] { padding: 10px; cursor: pointer; }
 .btn-row { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 6px; }
 button.action, button.secondary, button.danger, .history-header button {
-  border: 0; border-radius: var(--radius-sm); padding: 11px 18px;
-  font-size: 0.92rem; font-weight: 600; cursor: pointer;
-  transition: opacity 0.15s, transform 0.1s;
+  border: 0; border-radius: var(--radius-sm); padding: 11px 18px; font-size: 0.92rem;
+  font-weight: 600; cursor: pointer; transition: opacity 0.15s, transform 0.1s;
 }
-button.action {
-  background: linear-gradient(135deg, #34d399, #22d3ee); color: #0b1220;
-}
+button.action { background: linear-gradient(135deg, #34d399, #22d3ee); color: #0b1220; }
 button.action:hover { opacity: 0.9; }
 button.action:active { transform: scale(0.98); }
 button.action:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
-button.secondary {
-  background: var(--bg-soft); color: var(--text); border: 1px solid var(--border);
-}
+button.secondary { background: var(--bg-soft); color: var(--text); border: 1px solid var(--border); }
 button.secondary:hover { border-color: var(--text-dim); }
-button.danger {
-  background: var(--danger-soft); color: var(--danger); border: 1px solid transparent;
-}
+button.danger { background: var(--danger-soft); color: var(--danger); border: 1px solid transparent; }
 button.danger:hover { border-color: var(--danger); }
-.status {
-  margin-top: 12px; font-size: 0.9rem; color: var(--text-muted); min-height: 1.4em;
-}
+.status { margin-top: 12px; font-size: 0.9rem; color: var(--text-muted); min-height: 1.4em; }
 .status.loading { color: var(--accent-2); }
 .error {
-  color: var(--danger); background: var(--danger-soft);
-  border: 1px solid rgba(248, 113, 113, 0.25); padding: 10px 12px;
-  border-radius: var(--radius-sm); margin-top: 10px; white-space: pre-wrap; font-size: 0.9rem;
+  color: var(--danger); background: var(--danger-soft); border: 1px solid rgba(248, 113, 113, 0.25);
+  padding: 10px 12px; border-radius: var(--radius-sm); margin-top: 10px; white-space: pre-wrap; font-size: 0.9rem;
 }
 .chat-layout { display: grid; grid-template-columns: 240px 1fr; gap: 16px; }
 .history {
-  border: 1px solid var(--border-soft); border-radius: var(--radius-sm);
-  padding: 10px; background: var(--bg); max-height: 640px; overflow-y: auto;
+  border: 1px solid var(--border-soft); border-radius: var(--radius-sm); padding: 10px;
+  background: var(--bg); max-height: 640px; overflow-y: auto;
 }
 .history-header { display: flex; gap: 6px; margin-bottom: 10px; }
 .history-header button {
@@ -134,30 +111,22 @@ button.danger:hover { border-color: var(--danger); }
 }
 .history-item {
   padding: 10px 12px; border-radius: 10px; margin-bottom: 6px; cursor: pointer;
-  background: var(--bg-elevated); border: 1px solid transparent;
-  transition: border-color 0.15s, background 0.15s;
+  background: var(--bg-elevated); border: 1px solid transparent; transition: border-color 0.15s, background 0.15s;
 }
 .history-item:hover { border-color: var(--border); }
-.history-item.active {
-  background: var(--accent-soft); border-color: rgba(110, 231, 183, 0.35);
-}
-.history-item-title {
-  font-weight: 600; font-size: 0.9rem; overflow: hidden;
-  text-overflow: ellipsis; white-space: nowrap;
-}
+.history-item.active { background: var(--accent-soft); border-color: rgba(110, 231, 183, 0.35); }
+.history-item-title { font-weight: 600; font-size: 0.9rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .history-item-meta { font-size: 0.75rem; margin-top: 4px; color: var(--text-dim); }
 .chat-main { min-width: 0; }
 .chat-box {
-  height: 420px; overflow-y: auto; border: 1px solid var(--border-soft);
-  border-radius: var(--radius-sm); padding: 14px; margin: 12px 0; background: var(--bg);
+  height: 420px; overflow-y: auto; border: 1px solid var(--border-soft); border-radius: var(--radius-sm);
+  padding: 14px; margin: 12px 0; background: var(--bg);
 }
 .msg {
-  padding: 11px 14px; border-radius: 12px; margin-bottom: 10px;
-  white-space: pre-wrap; line-height: 1.55; max-width: 92%; font-size: 0.95rem;
+  padding: 11px 14px; border-radius: 12px; margin-bottom: 10px; white-space: pre-wrap;
+  line-height: 1.55; max-width: 92%; font-size: 0.95rem;
 }
-.msg.user {
-  background: var(--user-bg); margin-right: auto; border-bottom-right-radius: 4px;
-}
+.msg.user { background: var(--user-bg); margin-right: auto; border-bottom-right-radius: 4px; }
 .msg.assistant {
   background: var(--assistant-bg); margin-left: auto;
   border: 1px solid rgba(96, 165, 250, 0.15); border-bottom-left-radius: 4px;
@@ -170,20 +139,17 @@ button.danger:hover { border-color: var(--danger); }
 }
 .preview { margin-top: 12px; }
 .model-card {
-  border: 1px solid var(--border-soft); padding: 14px; margin-bottom: 8px;
-  border-radius: var(--radius-sm); background: var(--bg);
-  display: flex; flex-wrap: wrap; gap: 8px 16px; align-items: center;
+  border: 1px solid var(--border-soft); padding: 14px; margin-bottom: 8px; border-radius: var(--radius-sm);
+  background: var(--bg); display: flex; flex-wrap: wrap; gap: 8px 16px; align-items: center;
 }
 .model-card b { font-size: 0.95rem; }
 .model-card .meta { color: var(--text-muted); font-size: 0.85rem; }
 .model-card .tags { display: flex; flex-wrap: wrap; gap: 6px; margin-right: auto; }
 .tag {
-  font-size: 0.72rem; padding: 3px 8px; border-radius: 999px;
-  background: var(--bg-soft); color: var(--text-muted); border: 1px solid var(--border);
+  font-size: 0.72rem; padding: 3px 8px; border-radius: 999px; background: var(--bg-soft);
+  color: var(--text-muted); border: 1px solid var(--border);
 }
-.empty-history {
-  color: var(--text-dim); text-align: center; padding: 24px 8px; font-size: 0.9rem;
-}
+.empty-history { color: var(--text-dim); text-align: center; padding: 24px 8px; font-size: 0.9rem; }
 .hint { font-size: 0.8rem; color: var(--text-dim); margin-top: 6px; }
 @media (max-width: 800px) {
   .chat-layout { grid-template-columns: 1fr; }
@@ -194,21 +160,17 @@ button.danger:hover { border-color: var(--danger); }
 </style>
 </head>
 <body>
-
 <header>
   <h1>AI Studio</h1>
   <span class="badge">ApiDuck · Proxy</span>
 </header>
-
 <div class="container">
-
   <div class="tabs">
     <button class="tab active" data-tab="chat">چت</button>
     <button class="tab" data-tab="image">تولید تصویر</button>
     <button class="tab" data-tab="edit">ویرایش تصویر</button>
     <button class="tab" data-tab="models">مدل‌ها</button>
   </div>
-
   <section id="chat" class="panel active">
     <div class="chat-layout">
       <aside class="history">
@@ -237,9 +199,7 @@ button.danger:hover { border-color: var(--danger); }
           </div>
           <div class="field">
             <label for="chatModel">مدل</label>
-            <select id="chatModel">
-              <option value="gpt-6-astra">gpt-6-astra</option>
-            </select>
+            <select id="chatModel"><option value="gpt-6-astra">gpt-6-astra</option></select>
           </div>
         </div>
         <div id="chatBox" class="chat-box"></div>
@@ -254,19 +214,19 @@ button.danger:hover { border-color: var(--danger); }
       </main>
     </div>
   </section>
-
   <section id="image" class="panel">
     <div class="field">
       <label for="imageModel">مدل تصویر</label>
       <select id="imageModel">
         <option value="grok-imagine-image">Grok Imagine (grok-imagine-image)</option>
         <option value="nano-banana-2">Nano Banana 2 (nano-banana-2)</option>
+        <option value="gpt-image-2.5-sunburst">GPT Image 2.5 Sunburst (gpt-image-2.5-sunburst)</option>
       </select>
     </div>
     <div class="field">
       <label for="imageModelCustom">مدل دلخواه (اختیاری)</label>
       <input type="text" id="imageModelCustom" placeholder="model id دیگر (اختیاری)" dir="ltr">
-      <div class="hint">مدل‌های تأییدشده: Grok Imagine و Nano Banana 2. فیلد دلخواه فقط برای تست مدل جدید.</div>
+      <div class="hint">مدل‌های تأییدشده: Grok Imagine، Nano Banana 2، GPT Image 2.5 Sunburst. فیلد دلخواه برای تست مدل جدید.</div>
     </div>
     <div class="field">
       <label for="imagePrompt">پرامپت</label>
@@ -298,13 +258,13 @@ button.danger:hover { border-color: var(--danger); }
     <div id="imageStatus" class="status"></div>
     <div id="imageResult" class="image-result"></div>
   </section>
-
   <section id="edit" class="panel">
     <div class="field">
       <label for="editModel">مدل ویرایش</label>
       <select id="editModel">
         <option value="grok-imagine-image">Grok Imagine (grok-imagine-image)</option>
         <option value="nano-banana-2">Nano Banana 2 (nano-banana-2)</option>
+        <option value="gpt-image-2.5-sunburst">GPT Image 2.5 Sunburst (gpt-image-2.5-sunburst)</option>
       </select>
     </div>
     <div class="field">
@@ -327,7 +287,6 @@ button.danger:hover { border-color: var(--danger); }
     <div id="editStatus" class="status"></div>
     <div id="editResult" class="image-result"></div>
   </section>
-
   <section id="models" class="panel">
     <div class="btn-row">
       <button type="button" class="action" onclick="loadModels()">بارگذاری مدل‌ها</button>
@@ -335,24 +294,19 @@ button.danger:hover { border-color: var(--danger); }
     <div id="modelStatus" class="status"></div>
     <div id="modelList"></div>
   </section>
-
 </div>
-
 <script>
 const API = "https://myhamed.netlify.app/.netlify/functions/ai";
-
-/* Confirmed image models from ApiDuck docs (generations + edits) */
 const IMAGE_MODELS = [
   { id: "grok-imagine-image", label: "Grok Imagine (grok-imagine-image)" },
-  { id: "nano-banana-2", label: "Nano Banana 2 (nano-banana-2)" }
+  { id: "nano-banana-2", label: "Nano Banana 2 (nano-banana-2)" },
+  { id: "gpt-image-2.5-sunburst", label: "GPT Image 2.5 Sunburst (gpt-image-2.5-sunburst)" }
 ];
-
 let allModels = [];
 let chats = [];
 let currentChatId = null;
 let messages = [];
 const STORAGE_KEY = "ai_studio_chats_v1";
-
 document.querySelectorAll(".tab").forEach(button => {
   button.addEventListener("click", () => {
     document.querySelectorAll(".tab").forEach(item => item.classList.remove("active"));
@@ -361,7 +315,6 @@ document.querySelectorAll(".tab").forEach(button => {
     document.getElementById(button.dataset.tab).classList.add("active");
   });
 });
-
 async function api(action, payload = {}) {
   const response = await fetch(API, {
     method: "POST",
@@ -376,18 +329,14 @@ async function api(action, payload = {}) {
     const error = data.error;
     if (typeof error === "string") throw new Error(error);
     if (error?.message) throw new Error(error.message);
-    if (data.message) {
-      throw new Error(typeof data.message === "string" ? data.message : JSON.stringify(data.message, null, 2));
-    }
+    if (data.message) throw new Error(typeof data.message === "string" ? data.message : JSON.stringify(data.message, null, 2));
     throw new Error(JSON.stringify(data, null, 2));
   }
   return data;
 }
-
 function createChatId() {
   return Date.now().toString(36) + Math.random().toString(36).substring(2, 8);
 }
-
 function loadChats() {
   try {
     const saved = localStorage.getItem(STORAGE_KEY);
@@ -395,32 +344,19 @@ function loadChats() {
   } catch { chats = []; }
   if (!Array.isArray(chats)) chats = [];
   renderHistory();
-  if (chats.length > 0) openChat(chats[0].id);
-  else newChat();
+  if (chats.length > 0) openChat(chats[0].id); else newChat();
 }
-
-function saveChats() {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(chats));
-}
-
+function saveChats() { localStorage.setItem(STORAGE_KEY, JSON.stringify(chats)); }
 function newChat() {
   const chat = {
-    id: createChatId(),
-    title: "گفتگوی جدید",
+    id: createChatId(), title: "گفتگوی جدید",
     model: document.getElementById("chatModel")?.value || "gpt-6-astra",
-    messages: [],
-    createdAt: Date.now(),
-    updatedAt: Date.now()
+    messages: [], createdAt: Date.now(), updatedAt: Date.now()
   };
-  chats.unshift(chat);
-  currentChatId = chat.id;
-  messages = chat.messages;
-  saveChats();
-  renderHistory();
-  renderMessages();
+  chats.unshift(chat); currentChatId = chat.id; messages = chat.messages;
+  saveChats(); renderHistory(); renderMessages();
   document.getElementById("chatStatus").textContent = "";
 }
-
 function openChat(id) {
   const chat = chats.find(item => item.id === id);
   if (!chat) return;
@@ -428,10 +364,8 @@ function openChat(id) {
   messages = Array.isArray(chat.messages) ? chat.messages : [];
   const model = document.getElementById("chatModel");
   if (model && chat.model) model.value = chat.model;
-  renderHistory();
-  renderMessages();
+  renderHistory(); renderMessages();
 }
-
 function saveCurrentChat() {
   const chat = chats.find(item => item.id === currentChatId);
   if (!chat) return;
@@ -443,10 +377,8 @@ function saveCurrentChat() {
     chat.title = firstUserMessage.content.replace(/\s+/g, " ").trim().substring(0, 40);
   }
   chats.sort((a, b) => b.updatedAt - a.updatedAt);
-  saveChats();
-  renderHistory();
+  saveChats(); renderHistory();
 }
-
 function renderHistory() {
   const list = document.getElementById("historyList");
   if (!chats.length) {
@@ -457,45 +389,33 @@ function renderHistory() {
     const active = chat.id === currentChatId ? "active" : "";
     return `<div class="history-item ${active}" onclick="openChat('${chat.id}')">
       <div class="history-item-title">${esc(chat.title)}</div>
-      <div class="history-item-meta">${chat.messages.length} پیام</div>
-    </div>`;
+      <div class="history-item-meta">${chat.messages.length} پیام</div></div>`;
   }).join("");
 }
-
 function renderMessages() {
   const box = document.getElementById("chatBox");
   box.innerHTML = "";
   messages.forEach(message => addMsg(message.role, message.content));
 }
-
 function deleteAllChats() {
   if (!chats.length) return;
   if (!confirm("همه تاریخچه گفتگو پاک شود؟")) return;
   chats = []; currentChatId = null; messages = [];
   saveChats(); newChat();
 }
-
 function clearCurrentChat() {
   messages = [];
   const chat = chats.find(item => item.id === currentChatId);
-  if (chat) {
-    chat.messages = [];
-    chat.title = "گفتگوی جدید";
-    chat.updatedAt = Date.now();
-  }
+  if (chat) { chat.messages = []; chat.title = "گفتگوی جدید"; chat.updatedAt = Date.now(); }
   saveChats(); renderHistory(); renderMessages();
 }
-
 document.getElementById("provider").addEventListener("change", refreshModels);
-
 function refreshModels() {
   const provider = document.getElementById("provider").value;
   const list = allModels.filter(model => provider === "all" || model.company === provider);
   const select = document.getElementById("chatModel");
   const current = select.value;
-  select.innerHTML = list.map(model =>
-    `<option value="${esc(model.id)}">${esc(model.id)}</option>`
-  ).join("");
+  select.innerHTML = list.map(model => `<option value="${esc(model.id)}">${esc(model.id)}</option>`).join("");
   if ([...select.options].some(option => option.value === current)) select.value = current;
   if (!list.length) select.innerHTML = '<option value="gpt-6-astra">gpt-6-astra</option>';
   if (currentChatId) {
@@ -503,33 +423,27 @@ function refreshModels() {
     if (chat) { chat.model = select.value; saveChats(); }
   }
 }
-
 function populateImageModelSelects(fromApi) {
   const ids = new Set(IMAGE_MODELS.map(m => m.id));
   if (Array.isArray(fromApi)) {
     fromApi.forEach(m => {
       const id = (m.id || "").toLowerCase();
       if (id.includes("imagine") || id.includes("image") || id.includes("banana") ||
-          id.includes("dall") || id.includes("flux") || id.includes("diffusion") || id.includes("imagen")) {
-        ids.add(m.id);
-      }
+          id.includes("sunburst") || id.includes("dall") || id.includes("flux") ||
+          id.includes("diffusion") || id.includes("imagen")) ids.add(m.id);
     });
   }
   const options = [...ids].map(id => {
     const known = IMAGE_MODELS.find(m => m.id === id);
-    const label = known ? known.label : id;
-    return `<option value="${esc(id)}">${esc(label)}</option>`;
+    return `<option value="${esc(id)}">${esc(known ? known.label : id)}</option>`;
   }).join("");
   const imageSelect = document.getElementById("imageModel");
   const editSelect = document.getElementById("editModel");
-  const prevImage = imageSelect.value;
-  const prevEdit = editSelect.value;
-  imageSelect.innerHTML = options;
-  editSelect.innerHTML = options;
+  const prevImage = imageSelect.value, prevEdit = editSelect.value;
+  imageSelect.innerHTML = options; editSelect.innerHTML = options;
   if ([...imageSelect.options].some(o => o.value === prevImage)) imageSelect.value = prevImage;
   if ([...editSelect.options].some(o => o.value === prevEdit)) editSelect.value = prevEdit;
 }
-
 async function sendMessage() {
   const input = document.getElementById("chatInput");
   const text = input.value.trim();
@@ -537,39 +451,25 @@ async function sendMessage() {
   if (!currentChatId) newChat();
   const model = document.getElementById("chatModel").value;
   const btn = document.getElementById("sendBtn");
-  addMsg("user", text);
-  input.value = "";
-  messages.push({ role: "user", content: text });
-  saveCurrentChat();
+  addMsg("user", text); input.value = "";
+  messages.push({ role: "user", content: text }); saveCurrentChat();
   const status = document.getElementById("chatStatus");
-  status.textContent = "در حال تولید پاسخ...";
-  status.classList.add("loading");
-  btn.disabled = true;
+  status.textContent = "در حال تولید پاسخ..."; status.classList.add("loading"); btn.disabled = true;
   try {
     const data = await api("chat", { model, messages });
     const answer = data.choices?.[0]?.message?.content || "پاسخی دریافت نشد.";
-    addMsg("assistant", answer);
-    messages.push({ role: "assistant", content: answer });
-    saveCurrentChat();
-    status.textContent = "انجام شد.";
+    addMsg("assistant", answer); messages.push({ role: "assistant", content: answer });
+    saveCurrentChat(); status.textContent = "انجام شد.";
   } catch (error) {
-    addMsg("assistant", "خطا: " + error.message);
-    status.textContent = "ناموفق.";
-  } finally {
-    status.classList.remove("loading");
-    btn.disabled = false;
-  }
+    addMsg("assistant", "خطا: " + error.message); status.textContent = "ناموفق.";
+  } finally { status.classList.remove("loading"); btn.disabled = false; }
 }
-
 function addMsg(role, text) {
   const div = document.createElement("div");
-  div.className = "msg " + role;
-  div.textContent = text;
+  div.className = "msg " + role; div.textContent = text;
   const box = document.getElementById("chatBox");
-  box.appendChild(div);
-  box.scrollTop = box.scrollHeight;
+  box.appendChild(div); box.scrollTop = box.scrollHeight;
 }
-
 async function generateImage() {
   const prompt = document.getElementById("imagePrompt").value.trim();
   if (!prompt) return;
@@ -578,42 +478,29 @@ async function generateImage() {
   const btn = document.getElementById("genBtn");
   const custom = document.getElementById("imageModelCustom").value.trim();
   const model = custom || document.getElementById("imageModel").value;
-  status.textContent = "در حال تولید تصویر...";
-  status.classList.add("loading");
-  output.innerHTML = "";
-  btn.disabled = true;
+  status.textContent = "در حال تولید تصویر..."; status.classList.add("loading");
+  output.innerHTML = ""; btn.disabled = true;
   try {
     const data = await api("image", {
-      model,
-      prompt,
+      model, prompt,
       size: document.getElementById("imageSize").value,
       quality: document.getElementById("imageQuality").value
     });
     const item = data.data?.[0];
-    if (item?.url) {
-      output.innerHTML = `<img src="${item.url}" alt="Generated image">`;
-    } else if (item?.b64_json) {
-      output.innerHTML = `<img src="data:image/png;base64,${item.b64_json}" alt="Generated image">`;
-    } else {
-      throw new Error("تصویری برگردانده نشد.");
-    }
+    if (item?.url) output.innerHTML = `<img src="${item.url}" alt="Generated image">`;
+    else if (item?.b64_json) output.innerHTML = `<img src="data:image/png;base64,${item.b64_json}" alt="Generated image">`;
+    else throw new Error("تصویری برگردانده نشد.");
     status.textContent = "انجام شد.";
   } catch (error) {
     status.innerHTML = `<div class="error">${esc(error.message)}</div>`;
-  } finally {
-    status.classList.remove("loading");
-    btn.disabled = false;
-  }
+  } finally { status.classList.remove("loading"); btn.disabled = false; }
 }
-
 function previewEditImage() {
   const file = document.getElementById("editFile").files[0];
   const image = document.getElementById("editPreview");
   if (!file) return;
-  image.src = URL.createObjectURL(file);
-  image.hidden = false;
+  image.src = URL.createObjectURL(file); image.hidden = false;
 }
-
 async function editImage() {
   const file = document.getElementById("editFile").files[0];
   const prompt = document.getElementById("editPrompt").value.trim();
@@ -623,10 +510,8 @@ async function editImage() {
   const btn = document.getElementById("editBtn");
   const custom = document.getElementById("editModelCustom").value.trim();
   const model = custom || document.getElementById("editModel").value;
-  status.textContent = "در حال ویرایش...";
-  status.classList.add("loading");
-  output.innerHTML = "";
-  btn.disabled = true;
+  status.textContent = "در حال ویرایش..."; status.classList.add("loading");
+  output.innerHTML = ""; btn.disabled = true;
   try {
     const formData = new FormData();
     formData.append("image", file, file.name);
@@ -644,63 +529,43 @@ async function editImage() {
       throw new Error(JSON.stringify(data, null, 2));
     }
     const item = data.data?.[0];
-    if (item?.url) {
-      output.innerHTML = `<img src="${item.url}" alt="Edited image">`;
-    } else if (item?.b64_json) {
-      output.innerHTML = `<img src="data:image/png;base64,${item.b64_json}" alt="Edited image">`;
-    } else {
-      throw new Error("تصویر ویرایش‌شده برگردانده نشد.");
-    }
+    if (item?.url) output.innerHTML = `<img src="${item.url}" alt="Edited image">`;
+    else if (item?.b64_json) output.innerHTML = `<img src="data:image/png;base64,${item.b64_json}" alt="Edited image">`;
+    else throw new Error("تصویر ویرایش‌شده برگردانده نشد.");
     status.textContent = "انجام شد.";
   } catch (error) {
     status.innerHTML = `<div class="error">${esc(error.message)}</div>`;
-  } finally {
-    status.classList.remove("loading");
-    btn.disabled = false;
-  }
+  } finally { status.classList.remove("loading"); btn.disabled = false; }
 }
-
 async function loadModels() {
   const status = document.getElementById("modelStatus");
   try {
-    status.textContent = "در حال بارگذاری...";
-    status.classList.add("loading");
+    status.textContent = "در حال بارگذاری..."; status.classList.add("loading");
     const data = await api("models");
     allModels = data.data || [];
-    refreshModels();
-    populateImageModelSelects(allModels);
+    refreshModels(); populateImageModelSelects(allModels);
     document.getElementById("modelList").innerHTML = allModels.map(model => {
       const capabilities = [];
       if (model.supports_vision) capabilities.push("vision");
       if (model.supports_reasoning) capabilities.push("reasoning");
       if (model.supports_tools) capabilities.push("tools");
-      return `<div class="model-card">
-        <b>${esc(model.id)}</b>
+      return `<div class="model-card"><b>${esc(model.id)}</b>
         <span class="meta">${esc(model.company || model.owned_by || "")}</span>
-        <div class="tags">${capabilities.map(c => `<span class="tag">${esc(c)}</span>`).join("")}</div>
-      </div>`;
+        <div class="tags">${capabilities.map(c => `<span class="tag">${esc(c)}</span>`).join("")}</div></div>`;
     }).join("");
     status.textContent = `${allModels.length} مدل بارگذاری شد.`;
   } catch (error) {
     status.textContent = "خطا: " + error.message;
-  } finally {
-    status.classList.remove("loading");
-  }
+  } finally { status.classList.remove("loading"); }
 }
-
 function esc(value) {
   const div = document.createElement("div");
   div.textContent = value ?? "";
   return div.innerHTML;
 }
-
 document.getElementById("chatInput").addEventListener("keydown", e => {
-  if (e.key === "Enter" && !e.shiftKey) {
-    e.preventDefault();
-    sendMessage();
-  }
+  if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); sendMessage(); }
 });
-
 populateImageModelSelects([]);
 loadChats();
 loadModels();
