@@ -30,7 +30,7 @@ header h1 {
 }
 
 .container {
-    max-width: 1100px;
+    max-width: 1200px;
     margin: 20px auto;
     padding: 0 16px;
 }
@@ -104,9 +104,77 @@ button.action:hover {
     opacity: .85;
 }
 
+button.danger {
+    background: #b00020;
+}
+
+button.secondary {
+    background: #666;
+}
+
 .status {
     margin-top: 12px;
     color: #555;
+}
+
+.chat-layout {
+    display: grid;
+    grid-template-columns: 240px 1fr;
+    gap: 16px;
+}
+
+.history {
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 10px;
+    background: #fafafa;
+    max-height: 600px;
+    overflow-y: auto;
+}
+
+.history-header {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 10px;
+}
+
+.history-header button {
+    flex: 1;
+    padding: 8px;
+    border: 0;
+    border-radius: 7px;
+    cursor: pointer;
+}
+
+.history-item {
+    padding: 10px;
+    border-radius: 8px;
+    margin-bottom: 6px;
+    cursor: pointer;
+    background: white;
+    border: 1px solid #ddd;
+}
+
+.history-item.active {
+    background: #111;
+    color: white;
+}
+
+.history-item-title {
+    font-weight: bold;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.history-item-delete {
+    font-size: 12px;
+    margin-top: 5px;
+    opacity: .7;
+}
+
+.chat-main {
+    min-width: 0;
 }
 
 .chat-box {
@@ -124,6 +192,7 @@ button.action:hover {
     border-radius: 10px;
     margin-bottom: 10px;
     white-space: pre-wrap;
+    line-height: 1.5;
 }
 
 .msg.user {
@@ -132,6 +201,12 @@ button.action:hover {
 
 .msg.assistant {
     background: #dff0ff;
+}
+
+.chat-controls {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
 }
 
 .image-result img {
@@ -148,17 +223,38 @@ button.action:hover {
     background: #fafafa;
 }
 
+.preview {
+    max-width: 100%;
+    max-height: 400px;
+    margin-top: 12px;
+    border-radius: 10px;
+}
+
 .error {
     color: #b00020;
     margin-top: 10px;
     white-space: pre-wrap;
 }
 
-.preview {
-    max-width: 100%;
-    max-height: 400px;
-    margin-top: 12px;
-    border-radius: 10px;
+.empty-history {
+    color: #777;
+    text-align: center;
+    padding: 20px 5px;
+}
+
+@media (max-width: 800px) {
+
+    .chat-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .history {
+        max-height: 220px;
+    }
+
+    .chat-controls {
+        grid-template-columns: 1fr;
+    }
 }
 </style>
 </head>
@@ -172,94 +268,236 @@ button.action:hover {
 <div class="container">
 
     <div class="tabs">
-        <button class="tab active" data-tab="chat">Chat</button>
-        <button class="tab" data-tab="image">Grok Imagine</button>
-        <button class="tab" data-tab="edit">Image Edit</button>
-        <button class="tab" data-tab="models">Models</button>
+        <button class="tab active" data-tab="chat">
+            Chat
+        </button>
+
+        <button class="tab" data-tab="image">
+            Grok Imagine
+        </button>
+
+        <button class="tab" data-tab="edit">
+            Image Edit
+        </button>
+
+        <button class="tab" data-tab="models">
+            Models
+        </button>
     </div>
 
-    <!-- Chat -->
+
+    <!-- CHAT -->
+
     <section id="chat" class="panel active">
 
-        <label for="provider">Provider</label>
+        <div class="chat-layout">
 
-        <select id="provider">
-            <option value="all">All</option>
-            <option value="OpenAI">OpenAI</option>
-            <option value="Anthropic">Anthropic</option>
-            <option value="xAI">xAI</option>
-            <option value="Google">Google</option>
-            <option value="DeepSeek">DeepSeek</option>
-            <option value="Alibaba">Alibaba</option>
-            <option value="Moonshot AI">Moonshot AI</option>
-            <option value="Zhipu AI">Zhipu AI</option>
-            <option value="MiniMax">MiniMax</option>
-        </select>
+            <aside class="history">
 
-        <label for="chatModel">Model</label>
+                <div class="history-header">
 
-        <select id="chatModel">
-            <option value="gpt-6-astra">gpt-6-astra</option>
-        </select>
+                    <button onclick="newChat()">
+                        New
+                    </button>
 
-        <div id="chatBox" class="chat-box"></div>
+                    <button
+                        class="secondary"
+                        onclick="deleteAllChats()"
+                    >
+                        Clear
+                    </button>
 
-        <textarea
-            id="chatInput"
-            placeholder="Type your message..."
-        ></textarea>
+                </div>
 
-        <button class="action" onclick="sendMessage()">
-            Send
-        </button>
+                <div id="historyList"></div>
 
-        <button class="action" onclick="clearChat()">
-            Clear
-        </button>
+            </aside>
 
-        <div id="chatStatus" class="status"></div>
+
+            <main class="chat-main">
+
+                <label for="provider">
+                    Provider
+                </label>
+
+                <select id="provider">
+                    <option value="all">
+                        All
+                    </option>
+
+                    <option value="OpenAI">
+                        OpenAI
+                    </option>
+
+                    <option value="Anthropic">
+                        Anthropic
+                    </option>
+
+                    <option value="xAI">
+                        xAI
+                    </option>
+
+                    <option value="Google">
+                        Google
+                    </option>
+
+                    <option value="DeepSeek">
+                        DeepSeek
+                    </option>
+
+                    <option value="Alibaba">
+                        Alibaba
+                    </option>
+
+                    <option value="Moonshot AI">
+                        Moonshot AI
+                    </option>
+
+                    <option value="Zhipu AI">
+                        Zhipu AI
+                    </option>
+
+                    <option value="MiniMax">
+                        MiniMax
+                    </option>
+                </select>
+
+
+                <label for="chatModel">
+                    Model
+                </label>
+
+                <select id="chatModel">
+                    <option value="gpt-6-astra">
+                        gpt-6-astra
+                    </option>
+                </select>
+
+
+                <div
+                    id="chatBox"
+                    class="chat-box"
+                ></div>
+
+
+                <textarea
+                    id="chatInput"
+                    placeholder="Type your message..."
+                ></textarea>
+
+
+                <div class="chat-controls">
+
+                    <button
+                        class="action"
+                        onclick="sendMessage()"
+                    >
+                        Send
+                    </button>
+
+                    <button
+                        class="action secondary"
+                        onclick="clearCurrentChat()"
+                    >
+                        Clear Chat
+                    </button>
+
+                </div>
+
+
+                <div
+                    id="chatStatus"
+                    class="status"
+                ></div>
+
+            </main>
+
+        </div>
 
     </section>
 
-    <!-- Image Generation -->
+
+    <!-- IMAGE GENERATION -->
+
     <section id="image" class="panel">
 
-        <label for="imagePrompt">Prompt</label>
+        <label for="imagePrompt">
+            Prompt
+        </label>
 
         <textarea
             id="imagePrompt"
             placeholder="Describe the image you want to generate..."
         ></textarea>
 
-        <label for="imageSize">Size</label>
+
+        <label for="imageSize">
+            Size
+        </label>
 
         <select id="imageSize">
-            <option value="1024x1024">1024x1024</option>
-            <option value="1792x1024">1792x1024</option>
-            <option value="1024x1792">1024x1792</option>
+
+            <option value="1024x1024">
+                1024x1024
+            </option>
+
+            <option value="1792x1024">
+                1792x1024
+            </option>
+
+            <option value="1024x1792">
+                1024x1792
+            </option>
+
         </select>
 
-        <label for="imageQuality">Quality</label>
+
+        <label for="imageQuality">
+            Quality
+        </label>
 
         <select id="imageQuality">
-            <option value="standard">standard</option>
-            <option value="hd">hd</option>
+
+            <option value="standard">
+                standard
+            </option>
+
+            <option value="hd">
+                hd
+            </option>
+
         </select>
 
-        <button class="action" onclick="generateImage()">
+
+        <button
+            class="action"
+            onclick="generateImage()"
+        >
             Generate Image
         </button>
 
-        <div id="imageStatus" class="status"></div>
 
-        <div id="imageResult" class="image-result"></div>
+        <div
+            id="imageStatus"
+            class="status"
+        ></div>
+
+
+        <div
+            id="imageResult"
+            class="image-result"
+        ></div>
 
     </section>
 
-    <!-- Image Edit -->
+
+    <!-- IMAGE EDIT -->
+
     <section id="edit" class="panel">
 
-        <label for="editFile">Image</label>
+        <label for="editFile">
+            Image
+        </label>
 
         <input
             id="editFile"
@@ -268,6 +506,7 @@ button.action:hover {
             onchange="previewEditImage()"
         >
 
+
         <img
             id="editPreview"
             class="preview"
@@ -275,31 +514,56 @@ button.action:hover {
             alt="Preview"
         >
 
-        <label for="editPrompt">Edit Prompt</label>
+
+        <label for="editPrompt">
+            Edit Prompt
+        </label>
 
         <textarea
             id="editPrompt"
             placeholder="Describe how you want to edit the image..."
         ></textarea>
 
-        <button class="action" onclick="editImage()">
+
+        <button
+            class="action"
+            onclick="editImage()"
+        >
             Edit Image
         </button>
 
-        <div id="editStatus" class="status"></div>
 
-        <div id="editResult" class="image-result"></div>
+        <div
+            id="editStatus"
+            class="status"
+        ></div>
+
+
+        <div
+            id="editResult"
+            class="image-result"
+        ></div>
 
     </section>
 
-    <!-- Models -->
+
+    <!-- MODELS -->
+
     <section id="models" class="panel">
 
-        <button class="action" onclick="loadModels()">
+        <button
+            class="action"
+            onclick="loadModels()"
+        >
             Load Models
         </button>
 
-        <div id="modelStatus" class="status"></div>
+
+        <div
+            id="modelStatus"
+            class="status"
+        ></div>
+
 
         <div id="modelList"></div>
 
@@ -307,184 +571,641 @@ button.action:hover {
 
 </div>
 
+
 <script>
 
 /*
  * Frontend is hosted on GitHub Pages.
- * API requests are sent to the Netlify Function.
+ * API requests go through the Netlify Function.
  */
-const API = "https://myhamed.netlify.app/.netlify/functions/ai";
+
+const API =
+    "https://myhamed.netlify.app/.netlify/functions/ai";
+
+
+/*
+ * Chat state.
+ */
 
 let allModels = [];
+
+let chats = [];
+
+let currentChatId = null;
+
 let messages = [];
 
 
-/* Tabs */
+/*
+ * Local storage key.
+ */
 
-document.querySelectorAll(".tab").forEach(button => {
+const STORAGE_KEY =
+    "ai_studio_chats_v1";
 
-    button.addEventListener("click", () => {
 
-        document.querySelectorAll(".tab")
-            .forEach(item => item.classList.remove("active"));
+/*
+ * Tabs.
+ */
 
-        document.querySelectorAll(".panel")
-            .forEach(item => item.classList.remove("active"));
+document
+    .querySelectorAll(".tab")
+    .forEach(button => {
 
-        button.classList.add("active");
+        button.addEventListener("click", () => {
 
-        document
-            .getElementById(button.dataset.tab)
-            .classList.add("active");
+            document
+                .querySelectorAll(".tab")
+                .forEach(item =>
+                    item.classList.remove("active")
+                );
+
+            document
+                .querySelectorAll(".panel")
+                .forEach(item =>
+                    item.classList.remove("active")
+                );
+
+            button.classList.add("active");
+
+            document
+                .getElementById(button.dataset.tab)
+                .classList.add("active");
+
+        });
+
     });
 
-});
 
-
-/* API */
+/*
+ * API.
+ */
 
 async function api(action, payload = {}) {
-    const response = await fetch(API, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-            action,
-            payload
-        })
-    });
 
-    const text = await response.text();
+    const response =
+        await fetch(API, {
+
+            method: "POST",
+
+            headers: {
+                "Content-Type": "application/json"
+            },
+
+            body: JSON.stringify({
+                action,
+                payload
+            })
+
+        });
+
+
+    const text =
+        await response.text();
+
 
     let data;
 
+
     try {
-        data = JSON.parse(text);
+
+        data =
+            JSON.parse(text);
+
     } catch {
-        throw new Error(text || `HTTP ${response.status}`);
+
+        throw new Error(
+            text || `HTTP ${response.status}`
+        );
+
     }
 
+
     if (!response.ok) {
-        const error = data.error;
+
+        const error =
+            data.error;
+
 
         if (typeof error === "string") {
+
             throw new Error(error);
+
         }
+
 
         if (error?.message) {
+
             throw new Error(error.message);
+
         }
 
+
         if (data.message) {
+
             throw new Error(
                 typeof data.message === "string"
                     ? data.message
-                    : JSON.stringify(data.message, null, 2)
+                    : JSON.stringify(
+                        data.message,
+                        null,
+                        2
+                    )
             );
+
         }
+
 
         throw new Error(
             JSON.stringify(data, null, 2)
         );
+
     }
 
+
     return data;
+
 }
 
 
-/* Models */
+/*
+ * Generate unique chat ID.
+ */
 
-async function loadModels() {
+function createChatId() {
 
-    const status = document.getElementById("modelStatus");
+    return (
+        Date.now().toString(36) +
+        Math.random()
+            .toString(36)
+            .substring(2, 8)
+    );
+
+}
+
+
+/*
+ * Load chats from localStorage.
+ */
+
+function loadChats() {
 
     try {
 
-        status.textContent = "Loading...";
+        const saved =
+            localStorage.getItem(STORAGE_KEY);
 
-        const data = await api("models");
 
-        allModels = data.data || [];
+        chats =
+            saved
+                ? JSON.parse(saved)
+                : [];
 
-        refreshModels();
+    } catch {
 
-        document.getElementById("modelList").innerHTML =
-            allModels.map(model => {
+        chats = [];
 
-                const capabilities = [];
+    }
 
-                if (model.supports_vision) {
-                    capabilities.push("vision");
-                }
 
-                if (model.supports_reasoning) {
-                    capabilities.push("reasoning");
-                }
+    if (!Array.isArray(chats)) {
 
-                if (model.supports_tools) {
-                    capabilities.push("tools");
-                }
+        chats = [];
 
-                return `
-                    <div class="model">
-                        <b>${esc(model.id)}</b>
-                        <br>
-                        ${esc(model.company || "")}
-                        <br>
-                        ${capabilities.join(" · ")}
-                    </div>
-                `;
+    }
 
-            }).join("");
 
-        status.textContent =
-            `${allModels.length} models loaded.`;
+    renderHistory();
 
-    } catch (error) {
 
-        status.textContent =
-            "Error: " + error.message;
+    if (chats.length > 0) {
+
+        openChat(chats[0].id);
+
+    } else {
+
+        newChat();
 
     }
 
 }
 
 
-/* Provider filter */
+/*
+ * Save chats.
+ */
+
+function saveChats() {
+
+    localStorage.setItem(
+        STORAGE_KEY,
+        JSON.stringify(chats)
+    );
+
+}
+
+
+/*
+ * Create new chat.
+ */
+
+function newChat() {
+
+    const chat = {
+
+        id: createChatId(),
+
+        title: "New Chat",
+
+        model:
+            document.getElementById("chatModel")
+                ?.value || "gpt-6-astra",
+
+        messages: [],
+
+        createdAt: Date.now(),
+
+        updatedAt: Date.now()
+
+    };
+
+
+    chats.unshift(chat);
+
+    currentChatId =
+        chat.id;
+
+    messages =
+        chat.messages;
+
+
+    saveChats();
+
+    renderHistory();
+
+    renderMessages();
+
+    document.getElementById("chatStatus")
+        .textContent = "";
+
+}
+
+
+/*
+ * Open existing chat.
+ */
+
+function openChat(id) {
+
+    const chat =
+        chats.find(item => item.id === id);
+
+
+    if (!chat) {
+        return;
+    }
+
+
+    currentChatId =
+        chat.id;
+
+
+    messages =
+        Array.isArray(chat.messages)
+            ? chat.messages
+            : [];
+
+
+    const model =
+        document.getElementById("chatModel");
+
+
+    if (model && chat.model) {
+
+        model.value =
+            chat.model;
+
+    }
+
+
+    renderHistory();
+
+    renderMessages();
+
+}
+
+
+/*
+ * Save current chat.
+ */
+
+function saveCurrentChat() {
+
+    const chat =
+        chats.find(
+            item => item.id === currentChatId
+        );
+
+
+    if (!chat) {
+        return;
+    }
+
+
+    chat.messages =
+        messages;
+
+
+    chat.model =
+        document.getElementById("chatModel")
+            .value;
+
+
+    chat.updatedAt =
+        Date.now();
+
+
+    /*
+     * Automatically create a title
+     * from the first user message.
+     */
+
+    const firstUserMessage =
+        messages.find(
+            item => item.role === "user"
+        );
+
+
+    if (
+        firstUserMessage &&
+        chat.title === "New Chat"
+    ) {
+
+        chat.title =
+            firstUserMessage.content
+                .replace(/\s+/g, " ")
+                .trim()
+                .substring(0, 40);
+
+    }
+
+
+    chats.sort(
+        (a, b) =>
+            b.updatedAt - a.updatedAt
+    );
+
+
+    saveChats();
+
+    renderHistory();
+
+}
+
+
+/*
+ * Render chat history.
+ */
+
+function renderHistory() {
+
+    const list =
+        document.getElementById(
+            "historyList"
+        );
+
+
+    if (!chats.length) {
+
+        list.innerHTML =
+            '<div class="empty-history">No chats yet.</div>';
+
+        return;
+
+    }
+
+
+    list.innerHTML =
+        chats.map(chat => {
+
+            const active =
+                chat.id === currentChatId
+                    ? "active"
+                    : "";
+
+
+            return `
+                <div
+                    class="history-item ${active}"
+                    onclick="openChat('${chat.id}')"
+                >
+
+                    <div class="history-item-title">
+                        ${esc(chat.title)}
+                    </div>
+
+                    <div class="history-item-delete">
+                        ${chat.messages.length}
+                        messages
+                    </div>
+
+                </div>
+            `;
+
+        }).join("");
+
+}
+
+
+/*
+ * Render messages.
+ */
+
+function renderMessages() {
+
+    const box =
+        document.getElementById(
+            "chatBox"
+        );
+
+
+    box.innerHTML = "";
+
+
+    messages.forEach(message => {
+
+        addMsg(
+            message.role,
+            message.content
+        );
+
+    });
+
+}
+
+
+/*
+ * Delete current chat.
+ */
+
+function deleteCurrentChat() {
+
+    if (!currentChatId) {
+        return;
+    }
+
+
+    chats =
+        chats.filter(
+            chat =>
+                chat.id !== currentChatId
+        );
+
+
+    if (chats.length) {
+
+        saveChats();
+
+        openChat(chats[0].id);
+
+    } else {
+
+        saveChats();
+
+        newChat();
+
+    }
+
+}
+
+
+/*
+ * Delete all chats.
+ */
+
+function deleteAllChats() {
+
+    if (!chats.length) {
+        return;
+    }
+
+
+    const confirmed =
+        confirm(
+            "Delete all chat history?"
+        );
+
+
+    if (!confirmed) {
+        return;
+    }
+
+
+    chats = [];
+
+    currentChatId = null;
+
+    messages = [];
+
+    saveChats();
+
+    newChat();
+
+}
+
+
+/*
+ * Clear current conversation.
+ */
+
+function clearCurrentChat() {
+
+    messages = [];
+
+
+    const chat =
+        chats.find(
+            item => item.id === currentChatId
+        );
+
+
+    if (chat) {
+
+        chat.messages = [];
+
+        chat.title = "New Chat";
+
+        chat.updatedAt =
+            Date.now();
+
+    }
+
+
+    saveChats();
+
+    renderHistory();
+
+    renderMessages();
+
+}
+
+
+/*
+ * Chat model filtering.
+ */
 
 document
     .getElementById("provider")
-    .addEventListener("change", refreshModels);
+    .addEventListener(
+        "change",
+        refreshModels
+    );
 
 
 function refreshModels() {
 
     const provider =
-        document.getElementById("provider").value;
+        document.getElementById(
+            "provider"
+        ).value;
 
-    const list = allModels.filter(model =>
-        provider === "all" ||
-        model.company === provider
-    );
+
+    const list =
+        allModels.filter(model =>
+            provider === "all" ||
+            model.company === provider
+        );
+
 
     const select =
-        document.getElementById("chatModel");
+        document.getElementById(
+            "chatModel"
+        );
 
-    const current = select.value;
 
-    select.innerHTML = list.map(model =>
-        `<option value="${esc(model.id)}">${esc(model.id)}</option>`
-    ).join("");
+    const current =
+        select.value;
+
+
+    select.innerHTML =
+        list.map(model =>
+            `<option value="${esc(model.id)}">${esc(model.id)}</option>`
+        ).join("");
+
 
     if (
         [...select.options]
-            .some(option => option.value === current)
+            .some(
+                option =>
+                    option.value === current
+            )
     ) {
 
-        select.value = current;
+        select.value =
+            current;
 
     }
+
 
     if (!list.length) {
 
@@ -493,59 +1214,133 @@ function refreshModels() {
 
     }
 
+
+    if (currentChatId) {
+
+        const chat =
+            chats.find(
+                item =>
+                    item.id === currentChatId
+            );
+
+
+        if (chat) {
+
+            chat.model =
+                select.value;
+
+            saveChats();
+
+        }
+
+    }
+
 }
 
 
-/* Chat */
+/*
+ * Send chat message.
+ */
 
 async function sendMessage() {
 
     const input =
-        document.getElementById("chatInput");
+        document.getElementById(
+            "chatInput"
+        );
+
 
     const text =
         input.value.trim();
+
 
     if (!text) {
         return;
     }
 
-    const model =
-        document.getElementById("chatModel").value;
 
-    addMsg("user", text);
+    if (!currentChatId) {
+
+        newChat();
+
+    }
+
+
+    const model =
+        document.getElementById(
+            "chatModel"
+        ).value;
+
+
+    addMsg(
+        "user",
+        text
+    );
+
 
     input.value = "";
 
+
     messages.push({
+
         role: "user",
+
         content: text
+
     });
 
-    const status =
-        document.getElementById("chatStatus");
 
-    status.textContent = "Generating...";
+    saveCurrentChat();
+
+
+    const status =
+        document.getElementById(
+            "chatStatus"
+        );
+
+
+    status.textContent =
+        "Generating...";
+
 
     try {
 
-        const data = await api("chat", {
-            model,
-            messages
-        });
+        const data =
+            await api(
+                "chat",
+                {
+                    model,
+                    messages
+                }
+            );
+
 
         const answer =
-            data.choices?.[0]?.message?.content ||
+            data.choices?.[0]
+                ?.message?.content ||
             "No response.";
 
-        addMsg("assistant", answer);
+
+        addMsg(
+            "assistant",
+            answer
+        );
+
 
         messages.push({
+
             role: "assistant",
+
             content: answer
+
         });
 
-        status.textContent = "Done.";
+
+        saveCurrentChat();
+
+
+        status.textContent =
+            "Done.";
 
     } catch (error) {
 
@@ -554,106 +1349,141 @@ async function sendMessage() {
             "Error: " + error.message
         );
 
-        status.textContent = "Failed.";
+
+        status.textContent =
+            "Failed.";
 
     }
 
 }
 
 
+/*
+ * Add message to UI.
+ */
+
 function addMsg(role, text) {
 
     const div =
-        document.createElement("div");
+        document.createElement(
+            "div"
+        );
+
 
     div.className =
         "msg " + role;
 
-    div.textContent = text;
+
+    div.textContent =
+        text;
+
 
     const box =
-        document.getElementById("chatBox");
+        document.getElementById(
+            "chatBox"
+        );
+
 
     box.appendChild(div);
 
-    box.scrollTop = box.scrollHeight;
+
+    box.scrollTop =
+        box.scrollHeight;
 
 }
 
 
-function clearChat() {
-
-    messages = [];
-
-    document.getElementById("chatBox")
-        .innerHTML = "";
-
-    document.getElementById("chatStatus")
-        .textContent = "";
-
-}
-
-
-/* Image generation */
+/*
+ * Image generation.
+ */
 
 async function generateImage() {
 
     const prompt =
-        document.getElementById("imagePrompt")
-            .value.trim();
+        document.getElementById(
+            "imagePrompt"
+        ).value.trim();
+
 
     if (!prompt) {
         return;
     }
 
+
     const status =
-        document.getElementById("imageStatus");
+        document.getElementById(
+            "imageStatus"
+        );
+
 
     const output =
-        document.getElementById("imageResult");
+        document.getElementById(
+            "imageResult"
+        );
 
-    status.textContent = "Generating...";
+
+    status.textContent =
+        "Generating...";
+
 
     output.innerHTML = "";
 
+
     try {
 
-        const data = await api("image", {
+        const data =
+            await api(
+                "image",
+                {
 
-            model: "grok-imagine-image",
+                    model:
+                        "grok-imagine-image",
 
-            prompt,
+                    prompt,
 
-            size:
-                document.getElementById("imageSize")
-                    .value,
+                    size:
+                        document.getElementById(
+                            "imageSize"
+                        ).value,
 
-            quality:
-                document.getElementById("imageQuality")
-                    .value
+                    quality:
+                        document.getElementById(
+                            "imageQuality"
+                        ).value
 
-        });
+                }
+            );
+
 
         const item =
             data.data?.[0];
+
 
         if (item?.url) {
 
             output.innerHTML =
                 `<img src="${item.url}" alt="Generated image">`;
 
-        } else if (item?.b64_json) {
+        }
+
+        else if (item?.b64_json) {
 
             output.innerHTML =
                 `<img src="data:image/png;base64,${item.b64_json}" alt="Generated image">`;
 
-        } else {
+        }
 
-            throw new Error("No image returned.");
+        else {
+
+            throw new Error(
+                "No image returned."
+            );
 
         }
 
-        status.textContent = "Done.";
+
+        status.textContent =
+            "Done.";
 
     } catch (error) {
 
@@ -665,79 +1495,86 @@ async function generateImage() {
 }
 
 
-/* Image preview */
+/*
+ * Image preview.
+ */
 
 function previewEditImage() {
 
     const file =
-        document.getElementById("editFile")
-            .files[0];
+        document.getElementById(
+            "editFile"
+        ).files[0];
+
 
     const image =
-        document.getElementById("editPreview");
+        document.getElementById(
+            "editPreview"
+        );
+
 
     if (!file) {
         return;
     }
 
+
     image.src =
         URL.createObjectURL(file);
 
-    image.hidden = false;
+
+    image.hidden =
+        false;
 
 }
 
 
-/* Convert image to Data URL */
-
-function fileToDataUrl(file) {
-
-    return new Promise((resolve, reject) => {
-
-        const reader =
-            new FileReader();
-
-        reader.onload = () =>
-            resolve(reader.result);
-
-        reader.onerror = reject;
-
-        reader.readAsDataURL(file);
-
-    });
-
-}
-
-
-/* Image edit */
+/*
+ * Image edit.
+ */
 
 async function editImage() {
 
     const file =
-        document.getElementById("editFile")
-            .files[0];
+        document.getElementById(
+            "editFile"
+        ).files[0];
+
 
     const prompt =
-        document.getElementById("editPrompt")
-            .value.trim();
+        document.getElementById(
+            "editPrompt"
+        ).value.trim();
+
 
     if (!file || !prompt) {
         return;
     }
 
+
     const status =
-        document.getElementById("editStatus");
+        document.getElementById(
+            "editStatus"
+        );
+
 
     const output =
-        document.getElementById("editResult");
+        document.getElementById(
+            "editResult"
+        );
 
-    status.textContent = "Editing...";
+
+    status.textContent =
+        "Editing...";
+
 
     output.innerHTML = "";
 
+
     try {
 
-        const formData = new FormData();
+        const formData =
+            new FormData();
+
 
         formData.append(
             "image",
@@ -745,73 +1582,113 @@ async function editImage() {
             file.name
         );
 
+
         formData.append(
             "prompt",
             prompt
         );
+
 
         formData.append(
             "model",
             "grok-imagine-image"
         );
 
-        const response = await fetch(API, {
-            method: "POST",
-            body: formData
-        });
+
+        const response =
+            await fetch(
+                API,
+                {
+                    method: "POST",
+                    body: formData
+                }
+            );
+
 
         const text =
             await response.text();
 
+
         let data;
 
+
         try {
-            data = JSON.parse(text);
+
+            data =
+                JSON.parse(text);
+
         } catch {
+
             throw new Error(
-                text || `HTTP ${response.status}`
+                text ||
+                `HTTP ${response.status}`
             );
+
         }
+
 
         if (!response.ok) {
 
             const error =
                 data.error;
 
+
             if (typeof error === "string") {
+
                 throw new Error(error);
+
             }
+
 
             if (error?.message) {
-                throw new Error(error.message);
+
+                throw new Error(
+                    error.message
+                );
+
             }
 
+
             throw new Error(
-                JSON.stringify(data, null, 2)
+                JSON.stringify(
+                    data,
+                    null,
+                    2
+                )
             );
+
         }
+
 
         const item =
             data.data?.[0];
+
 
         if (item?.url) {
 
             output.innerHTML =
                 `<img src="${item.url}" alt="Edited image">`;
 
-        } else if (item?.b64_json) {
+        }
+
+        else if (item?.b64_json) {
 
             output.innerHTML =
                 `<img src="data:image/png;base64,${item.b64_json}" alt="Edited image">`;
 
-        } else {
+        }
+
+        else {
 
             throw new Error(
                 "No edited image returned."
             );
+
         }
 
-        status.textContent = "Done.";
+
+        status.textContent =
+            "Done.";
 
     } catch (error) {
 
@@ -819,26 +1696,136 @@ async function editImage() {
             `<div class="error">${esc(error.message)}</div>`;
 
     }
+
 }
 
 
+/*
+ * Load models.
+ */
 
-/* HTML escaping */
+async function loadModels() {
+
+    const status =
+        document.getElementById(
+            "modelStatus"
+        );
+
+
+    try {
+
+        status.textContent =
+            "Loading...";
+
+
+        const data =
+            await api("models");
+
+
+        allModels =
+            data.data || [];
+
+
+        refreshModels();
+
+
+        document.getElementById(
+            "modelList"
+        ).innerHTML =
+
+            allModels.map(model => {
+
+                const capabilities = [];
+
+
+                if (model.supports_vision) {
+
+                    capabilities.push(
+                        "vision"
+                    );
+
+                }
+
+
+                if (model.supports_reasoning) {
+
+                    capabilities.push(
+                        "reasoning"
+                    );
+
+                }
+
+
+                if (model.supports_tools) {
+
+                    capabilities.push(
+                        "tools"
+                    );
+
+                }
+
+
+                return `
+                    <div class="model">
+
+                        <b>
+                            ${esc(model.id)}
+                        </b>
+
+                        <br>
+
+                        ${esc(model.company || "")}
+
+                        <br>
+
+                        ${capabilities.join(" · ")}
+
+                    </div>
+                `;
+
+            }).join("");
+
+
+        status.textContent =
+            `${allModels.length} models loaded.`;
+
+    } catch (error) {
+
+        status.textContent =
+            "Error: " +
+            error.message;
+
+    }
+
+}
+
+
+/*
+ * Escape HTML.
+ */
 
 function esc(value) {
 
     const div =
-        document.createElement("div");
+        document.createElement(
+            "div"
+        );
+
 
     div.textContent =
         value ?? "";
+
 
     return div.innerHTML;
 
 }
 
 
-/* Initial model loading */
+/*
+ * Initial startup.
+ */
+
+loadChats();
 
 loadModels();
 
