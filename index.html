@@ -344,7 +344,6 @@ document.querySelectorAll(".tab").forEach(button => {
 /* API */
 
 async function api(action, payload = {}) {
-
     const response = await fetch(API, {
         method: "POST",
         headers: {
@@ -367,10 +366,26 @@ async function api(action, payload = {}) {
     }
 
     if (!response.ok) {
+        const error = data.error;
+
+        if (typeof error === "string") {
+            throw new Error(error);
+        }
+
+        if (error?.message) {
+            throw new Error(error.message);
+        }
+
+        if (data.message) {
+            throw new Error(
+                typeof data.message === "string"
+                    ? data.message
+                    : JSON.stringify(data.message, null, 2)
+            );
+        }
+
         throw new Error(
-            data.error ||
-            data.message ||
-            JSON.stringify(data)
+            JSON.stringify(data, null, 2)
         );
     }
 
